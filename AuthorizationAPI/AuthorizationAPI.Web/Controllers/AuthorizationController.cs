@@ -1,7 +1,9 @@
 ﻿using AuthorizationAPI.Services;
 using AuthorizationAPI.Web.Models.ErrorModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 
 namespace AuthorizationAPI.Web.Controllers
 {
@@ -22,8 +24,7 @@ namespace AuthorizationAPI.Web.Controllers
         /// <param name="email">User email</param>
         /// <param name="password">User password</param>
         /// <param name="rePassword">User password for validation</param>
-        [HttpPost]
-        [Route("singUp")]
+        [HttpPost("singUp")]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         public async Task<IActionResult> SingUpAsync(string email, string password, string rePassword, CancellationToken cancellationToken = default)
@@ -44,8 +45,7 @@ namespace AuthorizationAPI.Web.Controllers
         /// Confirms email for the user with id = <paramref name="id"/>
         /// </summary>
         /// <param name="id">User id</param>
-        [HttpGet]
-        [Route("confirm/{id}")]
+        [HttpGet("confirm/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         public async Task<IActionResult> ConfirmEmailAsync(Guid id, CancellationToken cancellationToken = default)
@@ -55,6 +55,20 @@ namespace AuthorizationAPI.Web.Controllers
                 return BadRequest(new ErrorDetails(400, result.Errors));
 
             return Ok();
+        }
+
+        /// <returns>access token for user witn same email and password</returns>
+        [HttpGet("SingIn")]
+        [AllowAnonymous]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(ErrorDetails), 400)]
+        public async Task<IActionResult> SingInAsync(string email, string password, CancellationToken cancellationToken = default)
+        {
+            var result = await _authorizationService.GetAccessTokenAsync(email, password, cancellationToken);
+            if (!result.IsComplite)
+                return BadRequest(new ErrorDetails(400, result.Errors));
+
+            return Json(result.Value);
         }
     }
 }
