@@ -7,6 +7,10 @@ namespace AuthorizationAPI.DAL
 {
     public class AuthorizationContext : DbContext, IAuthorizationContext
     {
+        public AuthorizationContext(DbContextOptions<AuthorizationContext> options) : base(options)
+        {
+        }
+
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

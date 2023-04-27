@@ -1,15 +1,31 @@
+using AuthorizationAPI.Application.Commands.Users.Create;
+using AuthorizationAPI.Application.Validators;
+using AuthorizationAPI.Web.Extensions;
+using FluentValidation;
+using MediatR;
+using System.Text.Json.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.ConfigureSqlContext(builder.Configuration, "DefaultConnection");
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.ConfigureRepositoryManager();
+builder.Services.ConfigureSwagger();
+builder.Services.ConfigureServices();
+builder.Services.ConfigureJWT(builder.Configuration, "JwtSettings", "validIssuer", "validAudience", "issuerSigningKey");
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+);
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateUser).Assembly));
+builder.Services.AddValidatorsFromAssemblyContaining<AddUserValidator>();
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

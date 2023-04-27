@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationAPI.Domain", "AuthorizationAPI.Domain\AuthorizationAPI.Domain.csproj", "{80015514-2DA4-480D-8DAD-28DFDC2FBEB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.Domain", "AuthorizationAPI.Domain\AuthorizationAPI.Domain.csproj", "{80015514-2DA4-480D-8DAD-28DFDC2FBEB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationAPI.Application", "AuthorizationAPI.Application\AuthorizationAPI.Application.csproj", "{8693263A-2902-475A-9D39-465CC97C084B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.Application", "AuthorizationAPI.Application\AuthorizationAPI.Application.csproj", "{8693263A-2902-475A-9D39-465CC97C084B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationAPI.DAL", "AuthorizationAPI.DAL\AuthorizationAPI.DAL.csproj", "{DACBAFEE-E2FE-43D5-BDC6-53D23F5653B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.DAL", "AuthorizationAPI.DAL\AuthorizationAPI.DAL.csproj", "{DACBAFEE-E2FE-43D5-BDC6-53D23F5653B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationAPI.Web", "AuthorizationAPI.Web\AuthorizationAPI.Web.csproj", "{9A739C58-DB79-4CF6-A3E7-430FC9FA30DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationAPI.Web", "AuthorizationAPI.Web\AuthorizationAPI.Web.csproj", "{57F23DAE-6D0A-4E52-BC2E-41B60CD9F852}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationAPI.Services", "AuthorizationAPI.Services\AuthorizationAPI.Services.csproj", "{D8A404FA-1E58-4CE3-B2EE-F3CDB55BD8E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +31,14 @@ Global
 		{DACBAFEE-E2FE-43D5-BDC6-53D23F5653B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DACBAFEE-E2FE-43D5-BDC6-53D23F5653B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DACBAFEE-E2FE-43D5-BDC6-53D23F5653B7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9A739C58-DB79-4CF6-A3E7-430FC9FA30DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A739C58-DB79-4CF6-A3E7-430FC9FA30DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9A739C58-DB79-4CF6-A3E7-430FC9FA30DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9A739C58-DB79-4CF6-A3E7-430FC9FA30DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57F23DAE-6D0A-4E52-BC2E-41B60CD9F852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57F23DAE-6D0A-4E52-BC2E-41B60CD9F852}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57F23DAE-6D0A-4E52-BC2E-41B60CD9F852}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57F23DAE-6D0A-4E52-BC2E-41B60CD9F852}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A404FA-1E58-4CE3-B2EE-F3CDB55BD8E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A404FA-1E58-4CE3-B2EE-F3CDB55BD8E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A404FA-1E58-4CE3-B2EE-F3CDB55BD8E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A404FA-1E58-4CE3-B2EE-F3CDB55BD8E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

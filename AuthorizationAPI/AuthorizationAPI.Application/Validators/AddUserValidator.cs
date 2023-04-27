@@ -16,7 +16,7 @@ namespace AuthorizationAPI.Application.Validators
             RuleFor(x => x.Password).NotNull().NotEmpty().MinimumLength(6).MaximumLength(15);
             RuleFor(x => x.RePassword).NotNull().NotEmpty().MinimumLength(6).MaximumLength(15);
 
-            RuleFor(x => x.Password).Matches(x => x.RePassword);
+            RuleFor(x => x.Password).Matches(x => x.RePassword).WithMessage("Password and repassword are not matchs");
         }
     }
 }

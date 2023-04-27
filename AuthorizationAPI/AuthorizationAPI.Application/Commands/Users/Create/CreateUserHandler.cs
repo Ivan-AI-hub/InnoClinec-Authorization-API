@@ -9,8 +9,8 @@ namespace AuthorizationAPI.Application.Commands.Users.Create
     internal class CreateUserHandler : IRequestHandler<CreateUser, ApplicationValueResult<User>>
     {
         private IRepositoryManager _repositoryManager;
-        private AbstractValidator<CreateUser> _validator;
-        public CreateUserHandler(IRepositoryManager repositoryManager, AbstractValidator<CreateUser> validator)
+        private IValidator<CreateUser> _validator;
+        public CreateUserHandler(IRepositoryManager repositoryManager, IValidator<CreateUser> validator)
         {
             _repositoryManager = repositoryManager;
             _validator = validator;

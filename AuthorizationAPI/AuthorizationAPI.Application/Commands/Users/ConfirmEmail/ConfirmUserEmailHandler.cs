@@ -9,8 +9,8 @@ namespace AuthorizationAPI.Application.Commands.Users.ConfirmEmail
     internal class ConfirmUserEmailHandler : IRequestHandler<ConfirmUserEmail, ApplicationVoidResult>
     {
         private IRepositoryManager _repositoryManager;
-        private AbstractValidator<ConfirmUserEmail> _validator;
-        public ConfirmUserEmailHandler(IRepositoryManager repositoryManager, AbstractValidator<ConfirmUserEmail> validator)
+        private IValidator<ConfirmUserEmail> _validator;
+        public ConfirmUserEmailHandler(IRepositoryManager repositoryManager, IValidator<ConfirmUserEmail> validator)
         {
             _repositoryManager = repositoryManager;
             _validator = validator;
