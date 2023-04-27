@@ -1,5 +1,6 @@
 ﻿using AuthorizationAPI.Services;
 using AuthorizationAPI.Web.Models.ErrorModels;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthorizationAPI.Web.Controllers
@@ -31,11 +32,11 @@ namespace AuthorizationAPI.Web.Controllers
             if (!result.IsComplite)
                 return BadRequest(new ErrorDetails(400, result.Errors));
 
-            //string url = HttpContext.Request.GetEncodedUrl();
-            //await _emailService.SendEmailAsync(result.Value.Email,
-            //                                   "Confirm email address",
-            //                                   $"<a href='{url}/confirm/{result.Value.Id}'>Тыкни чтобы подтвердить</a>",
-            //                                   cancellationToken);
+            string url = HttpContext.Request.Host.Value;
+            await _emailService.SendEmailAsync(result.Value.Email,
+                                               "Confirm email address",
+                                               $"<a href='https://{url}/confirm/{result.Value.Id}'>Тыкни чтобы подтвердить</a>",
+                                               cancellationToken);
             return Ok();
         }
 
@@ -43,7 +44,7 @@ namespace AuthorizationAPI.Web.Controllers
         /// Confirms email for the user with id = <paramref name="id"/>
         /// </summary>
         /// <param name="id">User id</param>
-        [HttpPost]
+        [HttpGet]
         [Route("confirm/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]

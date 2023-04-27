@@ -8,16 +8,16 @@ namespace AuthorizationAPI.Services
     {
         private const string _fromName = "Лучшая больница";
 
-        private const string _address = "InnoClinic@gmail.com";
-        private const string _password = "1234";
+        private const string _address = "tests1901@mail.ru";
+        private const string _password = "4FSE7NEASPGAgRGV5S9E";
 
-        private const string _host = "smtp.gmail.com";
+        private const string _host = "smtp.mail.ru";
         private const int _port = 587;
 
         /// <summary>
         /// Sends message to specific email with specific message subject
         /// </summary>
-        public async Task SendEmailAsync(string email, string subject, string message)
+        public async Task SendEmailAsync(string email, string subject, string message, CancellationToken cancellationToken = default)
         {
             using var emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress(_fromName, _address));
@@ -30,11 +30,11 @@ namespace AuthorizationAPI.Services
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync(_host, _port, SecureSocketOptions.StartTls);
-                await client.AuthenticateAsync(_address, _password);
-                await client.SendAsync(emailMessage);
+                await client.ConnectAsync(_host, _port, SecureSocketOptions.StartTls, cancellationToken);
+                await client.AuthenticateAsync(_address, _password, cancellationToken);
+                await client.SendAsync(emailMessage, cancellationToken);
 
-                await client.DisconnectAsync(true);
+                await client.DisconnectAsync(true, cancellationToken);
             }
         }
     }
