@@ -26,6 +26,7 @@ namespace AuthorizationAPI.Application.Commands.Users.Create
                 return new ApplicationResult<User>(null, "User with the same Email exist in the database.");
 
             var user = new User(request.Email, request.Role, Hacher.StringToHach(request.Password));
+
             _repositoryManager.UserRepository.Create(user);
             await _repositoryManager.SaveChangesAsync(cancellationToken);
 
