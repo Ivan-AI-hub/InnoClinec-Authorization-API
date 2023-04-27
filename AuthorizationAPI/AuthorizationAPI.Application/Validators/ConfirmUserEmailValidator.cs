@@ -5,7 +5,7 @@ namespace AuthorizationAPI.Application.Validators
 {
     public class ConfirmUserEmailValidator : AbstractValidator<ConfirmUserEmail>
     {
-        public ConfirmUserEmailValidator() 
+        public ConfirmUserEmailValidator()
         {
             RuleFor(x => x.Id).NotNull().NotEmpty();
         }

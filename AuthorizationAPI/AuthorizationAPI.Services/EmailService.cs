@@ -1,11 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AuthorizationAPI.Services
 {
@@ -18,6 +13,10 @@ namespace AuthorizationAPI.Services
 
         private const string _host = "smtp.gmail.com";
         private const int _port = 587;
+
+        /// <summary>
+        /// Sends message to specific email with specific message subject
+        /// </summary>
         public async Task SendEmailAsync(string email, string subject, string message)
         {
             using var emailMessage = new MimeMessage();

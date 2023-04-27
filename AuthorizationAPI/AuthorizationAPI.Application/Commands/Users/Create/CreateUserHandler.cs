@@ -18,7 +18,7 @@ namespace AuthorizationAPI.Application.Commands.Users.Create
 
         public async Task<ApplicationValueResult<User>> Handle(CreateUser request, CancellationToken cancellationToken)
         {
-            
+
             var validationResult = _validator.Validate(request);
             if (!validationResult.IsValid)
                 return new ApplicationValueResult<User>(validationResult);

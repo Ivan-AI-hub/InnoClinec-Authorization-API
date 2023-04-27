@@ -13,13 +13,23 @@ namespace AuthorizationAPI.Services
             _mediator = mediator;
         }
 
-        public async Task<ServiceValueResult<User>> SingUpPatientAsync(string email, string password, string rePassword, 
+        /// <summary>
+        /// Registers the patient in system
+        /// </summary>
+        /// <param name="email">patient email</param>
+        /// <param name="password">patient password</param>
+        /// <param name="rePassword">patient repassword</param>
+        public async Task<ServiceValueResult<User>> SingUpPatientAsync(string email, string password, string rePassword,
                                                                         CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(new CreateUser(email, password, rePassword, Role.Patient), cancellationToken);
             return new ServiceValueResult<User>(result);
         }
 
+        /// <summary>
+        /// Confirms email for the user with id = <paramref name="id"/>
+        /// </summary>
+        /// <param name="id">User id</param>
         public async Task<ServiceVoidResult> ConfirmEmailAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(new ConfirmUserEmail(id), cancellationToken);

@@ -1,6 +1,4 @@
-﻿using AuthorizationAPI.Application.Commands.Users.Create;
-using AuthorizationAPI.Application.Interfaces;
-using AuthorizationAPI.Domain;
+﻿using AuthorizationAPI.Application.Interfaces;
 using FluentValidation;
 using MediatR;
 
@@ -25,6 +23,9 @@ namespace AuthorizationAPI.Application.Commands.Users.ConfirmEmail
             var user = _repositoryManager.UserRepository.GetItemsByCondition(x => x.Id == request.Id, true).FirstOrDefault();
             if (user == null)
                 return new ApplicationVoidResult("User with the same Id does not exist in the database.");
+
+            if (user.IsEmailConfirmed)
+                return new ApplicationVoidResult("User's email address has already been confirmed");
 
             user.IsEmailConfirmed = true;
             await _repositoryManager.SaveChangesAsync(cancellationToken);

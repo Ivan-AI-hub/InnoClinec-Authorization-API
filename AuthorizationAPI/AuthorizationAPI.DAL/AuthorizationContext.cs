@@ -17,9 +17,5 @@ namespace AuthorizationAPI.DAL
         {
             modelBuilder.ApplyConfiguration(new UserConfigurator());
         }
-        public Task<int> SaveChangesAsync()
-        {
-            return SaveChangesAsync();
-        }
     }
 }
