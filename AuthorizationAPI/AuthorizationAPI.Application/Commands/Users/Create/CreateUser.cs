@@ -6,5 +6,5 @@ namespace AuthorizationAPI.Application.Commands.Users.Create
     public record CreateUser(string Email,
                           string Password,
                           string RePassword,
-                          Role Role) : IRequest<ApplicationResult<User>>;
+                          Role Role) : IRequest<ApplicationValueResult<User>>;
 }

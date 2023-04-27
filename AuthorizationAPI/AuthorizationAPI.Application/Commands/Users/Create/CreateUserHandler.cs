@@ -6,7 +6,7 @@ using MediatR;
 
 namespace AuthorizationAPI.Application.Commands.Users.Create
 {
-    internal class CreateUserHandler : IRequestHandler<CreateUser, ApplicationResult<User>>
+    internal class CreateUserHandler : IRequestHandler<CreateUser, ApplicationValueResult<User>>
     {
         private IRepositoryManager _repositoryManager;
         private AbstractValidator<CreateUser> _validator;
@@ -16,21 +16,22 @@ namespace AuthorizationAPI.Application.Commands.Users.Create
             _validator = validator;
         }
 
-        public async Task<ApplicationResult<User>> Handle(CreateUser request, CancellationToken cancellationToken)
+        public async Task<ApplicationValueResult<User>> Handle(CreateUser request, CancellationToken cancellationToken)
         {
+            
             var validationResult = _validator.Validate(request);
             if (!validationResult.IsValid)
-                return new ApplicationResult<User>(validationResult);
+                return new ApplicationValueResult<User>(validationResult);
 
             if (await _repositoryManager.UserRepository.IsItemExistAsync(x => x.Email == request.Email, cancellationToken))
-                return new ApplicationResult<User>(null, "User with the same Email exist in the database.");
+                return new ApplicationValueResult<User>(null, "User with the same Email exist in the database.");
 
             var user = new User(request.Email, request.Role, Hacher.StringToHach(request.Password));
 
             _repositoryManager.UserRepository.Create(user);
             await _repositoryManager.SaveChangesAsync(cancellationToken);
 
-            return new ApplicationResult<User>(user);
+            return new ApplicationValueResult<User>(user);
         }
     }
 }

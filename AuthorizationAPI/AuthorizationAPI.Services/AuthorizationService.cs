@@ -1,4 +1,5 @@
-﻿using AuthorizationAPI.Application.Commands.Users.Create;
+﻿using AuthorizationAPI.Application.Commands.Users.ConfirmEmail;
+using AuthorizationAPI.Application.Commands.Users.Create;
 using AuthorizationAPI.Domain;
 using MediatR;
 
@@ -12,10 +13,17 @@ namespace AuthorizationAPI.Services
             _mediator = mediator;
         }
 
-        public async Task<ServiceResult<User>> SingUpPatientAsync(string email, string password, string rePassword)
+        public async Task<ServiceValueResult<User>> SingUpPatientAsync(string email, string password, string rePassword, 
+                                                                        CancellationToken cancellationToken = default)
         {
-            var result = await _mediator.Send(new CreateUser(email, password, rePassword, Role.Patient));
-            return new ServiceResult<User>(result);
+            var result = await _mediator.Send(new CreateUser(email, password, rePassword, Role.Patient), cancellationToken);
+            return new ServiceValueResult<User>(result);
+        }
+
+        public async Task<ServiceVoidResult> ConfirmEmailAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            var result = await _mediator.Send(new ConfirmUserEmail(id), cancellationToken);
+            return new ServiceVoidResult(result);
         }
     }
 }

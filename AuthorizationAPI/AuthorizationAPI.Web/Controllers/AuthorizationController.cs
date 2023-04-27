@@ -23,5 +23,16 @@ namespace AuthorizationAPI.Web.Controllers
 
             return Ok();
         }
+
+        [HttpPost]
+        [Route("confirm/{id}")]
+        public async Task<IActionResult> ConfirmEmailAsync(Guid id)
+        {
+            var result = await _authorizationService.ConfirmEmailAsync(id);
+            if (!result.IsComplite)
+                return BadRequest(new ErrorDetails(400, result.Errors));
+
+            return Ok();
+        }
     }
 }
