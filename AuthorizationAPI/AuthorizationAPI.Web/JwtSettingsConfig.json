@@ -1,0 +1,6 @@
+{
+		"ValidIssuer": "MyAuthServerMyAuthServer",
+		"ValidAudience": "MyAuthClient",
+		"IssuerSigningKey": "InnoClinicSecretKey",
+		"Expires": 60
+}

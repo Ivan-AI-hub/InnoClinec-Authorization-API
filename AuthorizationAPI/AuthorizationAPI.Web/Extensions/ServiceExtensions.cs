@@ -2,6 +2,7 @@
 using AuthorizationAPI.DAL;
 using AuthorizationAPI.DAL.Repositories;
 using AuthorizationAPI.Services;
+using AuthorizationAPI.Services.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -32,10 +33,8 @@ namespace AuthorizationAPI.Web.Extensions
             services.AddScoped<EmailService>();
         }
 
-        public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration,
-                                string jwtSettingsSection, string issuerSection, string audienceSection, string keySection)
+        public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
-            var jwtSettings = configuration.GetSection(jwtSettingsSection);
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -49,9 +48,9 @@ namespace AuthorizationAPI.Web.Extensions
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings.GetSection(issuerSection).Value,
-                    ValidAudience = jwtSettings.GetSection(audienceSection).Value,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.GetSection(keySection).Value))
+                    ValidIssuer = configuration.GetSection(nameof(JwtSettings.ValidIssuer)).Value,
+                    ValidAudience = configuration.GetSection(nameof(JwtSettings.ValidAudience)).Value,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection(nameof(JwtSettings.IssuerSigningKey)).Value))
                 };
             });
         }

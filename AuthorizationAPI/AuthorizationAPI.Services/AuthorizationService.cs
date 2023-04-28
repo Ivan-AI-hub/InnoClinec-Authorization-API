@@ -2,8 +2,9 @@
 using AuthorizationAPI.Application.Commands.Users.Create;
 using AuthorizationAPI.Application.Queries.Users.GetByEmailAndPassword;
 using AuthorizationAPI.Domain;
+using AuthorizationAPI.Services.Models;
 using MediatR;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -14,11 +15,11 @@ namespace AuthorizationAPI.Services
     public class AuthorizationService
     {
         private IMediator _mediator;
-        private readonly IConfiguration _configuration;
-        public AuthorizationService(IMediator mediator, IConfiguration configuration)
+        private readonly JwtSettings _jwtSettings;
+        public AuthorizationService(IMediator mediator, IOptions<JwtSettings> jwtSettings)
         {
             _mediator = mediator;
-            _configuration = configuration;
+            _jwtSettings = jwtSettings.Value;
         }
 
         /// <summary>
@@ -51,21 +52,24 @@ namespace AuthorizationAPI.Services
                 return new ServiceValueResult<string>(null, result.Errors.ToArray());
 
             var user = result.Value;
+
+            if(!user.IsEmailConfirmed)
+                return new ServiceValueResult<string>(null, "User`s email has not been confirmed");
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 
-            var jwtSettings = _configuration.GetSection("JwtSettings");
 
-            var key = Encoding.UTF8.GetBytes(jwtSettings.GetSection("issuerSigningKey").Value);
+            var key = Encoding.UTF8.GetBytes(_jwtSettings.IssuerSigningKey);
 
             var jwt = new JwtSecurityToken(
-                    issuer: jwtSettings.GetSection("validIssuer").Value,
-                    audience: jwtSettings.GetSection("validAudience").Value,
+                    issuer: _jwtSettings.ValidIssuer,
+                    audience: _jwtSettings.ValidAudience,
                     claims: claims,
-                    expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtSettings.GetSection("expires").Value)),
+                    expires: DateTime.UtcNow.AddMinutes(_jwtSettings.Expires),
                     signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256));
 
             return new ServiceValueResult<string>(new JwtSecurityTokenHandler().WriteToken(jwt));
