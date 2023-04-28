@@ -1,5 +1,4 @@
-﻿
-using AuthorizationAPI.Application.Queries.Users.GetByEmailAndPassword;
+﻿using AuthorizationAPI.Application.Queries.Users.GetByEmailAndPassword;
 using FluentValidation;
 
 namespace AuthorizationAPI.Application.Validators

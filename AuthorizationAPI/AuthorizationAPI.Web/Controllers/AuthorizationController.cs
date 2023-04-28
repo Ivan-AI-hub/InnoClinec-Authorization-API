@@ -1,9 +1,7 @@
 ﻿using AuthorizationAPI.Services;
 using AuthorizationAPI.Web.Models.ErrorModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 
 namespace AuthorizationAPI.Web.Controllers
 {
@@ -60,7 +58,7 @@ namespace AuthorizationAPI.Web.Controllers
         /// <returns>access token for user witn same email and password</returns>
         [HttpGet("SingIn")]
         [AllowAnonymous]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(String), 200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         public async Task<IActionResult> SingInAsync(string email, string password, CancellationToken cancellationToken = default)
         {
@@ -68,7 +66,7 @@ namespace AuthorizationAPI.Web.Controllers
             if (!result.IsComplite)
                 return BadRequest(new ErrorDetails(400, result.Errors));
 
-            return Json(result.Value);
+            return Ok(result.Value);
         }
     }
 }
