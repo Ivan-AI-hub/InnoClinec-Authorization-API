@@ -1,6 +1,6 @@
-﻿using AuthorizationAPI.Application;
+﻿using AuthorizationAPI.Application.Results;
 
-namespace AuthorizationAPI.Services
+namespace AuthorizationAPI.Services.Results
 {
     public class ServiceValueResult<T> where T : class
     {
@@ -18,6 +18,16 @@ namespace AuthorizationAPI.Services
         {
             Value = applicationResult.Value;
             Errors = applicationResult.Errors;
+        }
+
+        public ServiceValueResult(IApplicationResult applicationResult)
+        {
+            Errors = applicationResult.Errors;
+        }
+
+        public ServiceValueResult(IServiceResult serviceResult)
+        {
+            Errors = serviceResult.Errors;
         }
     }
 }

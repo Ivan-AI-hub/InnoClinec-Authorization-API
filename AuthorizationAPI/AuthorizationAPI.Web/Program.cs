@@ -7,8 +7,6 @@ using MediatR;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.AddJsonFile("JwtSettingsConfig.json");
-builder.Configuration.AddJsonFile("EmailSettingsConfig.json");
 
 builder.Services.ConfigureSqlContext(builder.Configuration, "DefaultConnection");
 
@@ -27,8 +25,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<AddUserValidator>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthorization();
 
-builder.Services.Configure<JwtSettings>(builder.Configuration);
-builder.Services.Configure<EmailSettings>(builder.Configuration);
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettingsConfig"));
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettingsConfig"));
 
 var app = builder.Build();
 

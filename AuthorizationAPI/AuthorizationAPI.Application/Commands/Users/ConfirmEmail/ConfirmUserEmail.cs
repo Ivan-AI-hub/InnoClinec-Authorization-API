@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AuthorizationAPI.Application.Results;
+using MediatR;
 
 namespace AuthorizationAPI.Application.Commands.Users.ConfirmEmail
 {

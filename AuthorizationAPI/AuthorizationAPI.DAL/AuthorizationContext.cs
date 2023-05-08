@@ -1,11 +1,10 @@
-﻿using AuthorizationAPI.Application.Interfaces;
-using AuthorizationAPI.DAL.EntityConfiguration;
+﻿using AuthorizationAPI.DAL.EntityConfiguration;
 using AuthorizationAPI.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthorizationAPI.DAL
 {
-    public class AuthorizationContext : DbContext, IAuthorizationContext
+    public class AuthorizationContext : DbContext
     {
         public AuthorizationContext(DbContextOptions<AuthorizationContext> options) : base(options)
         {

@@ -1,4 +1,5 @@
-﻿using AuthorizationAPI.Application.Interfaces;
+﻿using AuthorizationAPI.Application.Results;
+using AuthorizationAPI.Domain.Interfaces;
 using FluentValidation;
 using MediatR;
 

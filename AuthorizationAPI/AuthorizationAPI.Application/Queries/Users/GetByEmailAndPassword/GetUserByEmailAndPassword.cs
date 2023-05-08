@@ -1,4 +1,5 @@
-﻿using AuthorizationAPI.Domain;
+﻿using AuthorizationAPI.Application.Results;
+using AuthorizationAPI.Domain;
 using MediatR;
 
 namespace AuthorizationAPI.Application.Queries.Users.GetByEmailAndPassword

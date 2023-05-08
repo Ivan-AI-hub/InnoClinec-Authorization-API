@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace AuthorizationAPI.Application.Interfaces
+namespace AuthorizationAPI.Domain.Interfaces
 {
     public interface IRepository<T>
     {

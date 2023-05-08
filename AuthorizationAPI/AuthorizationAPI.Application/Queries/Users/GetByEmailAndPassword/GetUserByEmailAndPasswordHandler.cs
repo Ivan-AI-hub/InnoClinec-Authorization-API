@@ -1,9 +1,9 @@
-﻿using AuthorizationAPI.Application.Interfaces;
+﻿using AuthorizationAPI.Application.Results;
 using AuthorizationAPI.Application.StaticHelpers;
 using AuthorizationAPI.Domain;
+using AuthorizationAPI.Domain.Interfaces;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace AuthorizationAPI.Application.Queries.Users.GetByEmailAndPassword
 {
@@ -16,20 +16,20 @@ namespace AuthorizationAPI.Application.Queries.Users.GetByEmailAndPassword
             _repositoryManager = repositoryManager;
             _validator = validator;
         }
-        public async Task<ApplicationValueResult<User>> Handle(GetUserByEmailAndPassword request, CancellationToken cancellationToken)
+        public Task<ApplicationValueResult<User>> Handle(GetUserByEmailAndPassword request, CancellationToken cancellationToken)
         {
             var validationResult = _validator.Validate(request);
             if (!validationResult.IsValid)
-                return new ApplicationValueResult<User>(validationResult);
+                return Task.FromResult(new ApplicationValueResult<User>(validationResult));
 
-            var user = await _repositoryManager.UserRepository
+            var user = _repositoryManager.UserRepository
                 .GetItemsByCondition(x => x.Email == request.Email && x.PasswordHach == Hacher.StringToHach(request.Password), false)
-                .FirstOrDefaultAsync(cancellationToken);
+                .FirstOrDefault();
 
             if (user == null)
-                return new ApplicationValueResult<User>(null, "User does not exist.");
+                return Task.FromResult(new ApplicationValueResult<User>(null, "User does not exist."));
 
-            return new ApplicationValueResult<User>(user);
+            return Task.FromResult(new ApplicationValueResult<User>(user));
         }
     }
 }

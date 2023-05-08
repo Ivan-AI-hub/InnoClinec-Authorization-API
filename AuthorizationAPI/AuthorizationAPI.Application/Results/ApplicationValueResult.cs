@@ -1,8 +1,9 @@
 ﻿using FluentValidation.Results;
 
-namespace AuthorizationAPI.Application
+namespace AuthorizationAPI.Application.Results
 {
-    public class ApplicationValueResult<T> where T : class
+    public class ApplicationValueResult<T> : IApplicationResult
+        where T : class
     {
         public IList<string> Errors { get; }
         public T? Value { get; internal set; }

@@ -1,4 +1,4 @@
-﻿namespace AuthorizationAPI.Application.Interfaces
+﻿namespace AuthorizationAPI.Domain.Interfaces
 {
     public interface IRepositoryManager
     {

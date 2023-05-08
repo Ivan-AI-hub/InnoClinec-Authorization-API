@@ -1,6 +1,6 @@
-﻿using AuthorizationAPI.Application.Interfaces;
-using AuthorizationAPI.DAL;
+﻿using AuthorizationAPI.DAL;
 using AuthorizationAPI.DAL.Repositories;
+using AuthorizationAPI.Domain.Interfaces;
 using AuthorizationAPI.Services;
 using AuthorizationAPI.Services.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,7 +23,6 @@ namespace AuthorizationAPI.Web.Extensions
         }
         public static void ConfigureRepositoryManager(this IServiceCollection services)
         {
-            services.AddScoped<IAuthorizationContext, AuthorizationContext>();
             services.AddScoped<IRepositoryManager, RepositoryManager>();
             services.AddScoped<IUserRepository, UserRepository>();
         }

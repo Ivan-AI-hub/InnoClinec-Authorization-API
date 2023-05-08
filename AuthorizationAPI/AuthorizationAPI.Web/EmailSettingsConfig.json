@@ -1,9 +1,0 @@
-{
-	"SenderName": "InnoClinic",
-
-	"EmailAddress": "tests1901@mail.ru",
-	"Password": "4FSE7NEASPGAgRGV5S9E",
-
-	"SmtpHost": "smtp.mail.ru",
-	"SmtpPort": 587
-}

@@ -3,6 +3,7 @@ using AuthorizationAPI.Application.Commands.Users.Create;
 using AuthorizationAPI.Application.Queries.Users.GetByEmailAndPassword;
 using AuthorizationAPI.Domain;
 using AuthorizationAPI.Services.Models;
+using AuthorizationAPI.Services.Results;
 using MediatR;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -53,7 +54,7 @@ namespace AuthorizationAPI.Services
 
             var user = result.Value;
 
-            if(!user.IsEmailConfirmed)
+            if (!user.IsEmailConfirmed)
                 return new ServiceValueResult<string>(null, "User`s email has not been confirmed");
 
             var claims = new List<Claim>

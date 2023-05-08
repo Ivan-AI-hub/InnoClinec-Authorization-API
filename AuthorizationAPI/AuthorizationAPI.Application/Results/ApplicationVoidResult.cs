@@ -1,9 +1,8 @@
-﻿
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 
-namespace AuthorizationAPI.Application
+namespace AuthorizationAPI.Application.Results
 {
-    public class ApplicationVoidResult
+    public class ApplicationVoidResult : IApplicationResult
     {
         public IList<string> Errors { get; }
         public bool IsComplite => Errors.Count == 0;

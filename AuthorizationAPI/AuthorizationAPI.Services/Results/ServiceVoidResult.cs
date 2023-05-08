@@ -1,6 +1,6 @@
-﻿using AuthorizationAPI.Application;
+﻿using AuthorizationAPI.Application.Results;
 
-namespace AuthorizationAPI.Services
+namespace AuthorizationAPI.Services.Results
 {
     public class ServiceVoidResult
     {
@@ -12,7 +12,12 @@ namespace AuthorizationAPI.Services
             Errors = errors.ToList();
         }
 
-        public ServiceVoidResult(ApplicationVoidResult applicationResult)
+        public ServiceVoidResult(IApplicationResult applicationResult)
+        {
+            Errors = applicationResult.Errors;
+        }
+
+        public ServiceVoidResult(IServiceResult applicationResult)
         {
             Errors = applicationResult.Errors;
         }

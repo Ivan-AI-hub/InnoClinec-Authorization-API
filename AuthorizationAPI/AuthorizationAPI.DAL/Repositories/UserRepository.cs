@@ -1,6 +1,6 @@
-﻿using AuthorizationAPI.Application.Interfaces;
-using AuthorizationAPI.DAL.Abstracts;
+﻿using AuthorizationAPI.DAL.Abstracts;
 using AuthorizationAPI.Domain;
+using AuthorizationAPI.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthorizationAPI.DAL.Repositories
