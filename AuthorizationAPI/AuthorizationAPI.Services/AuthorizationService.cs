@@ -20,17 +20,22 @@ namespace AuthorizationAPI.Services
     {
         private IRepositoryManager _repositoryManager;
         private IMapper _mapper;
+        private IValidator<SingUpModel> _singUpValidator;
+        private IValidator<ConfirmEmailModel> _confirmEmailValidator;
         private readonly JwtSettings _jwtSettings;
-        public AuthorizationService(IRepositoryManager repositoryManager, IMapper mapper, IOptions<JwtSettings> jwtSettings)
+        public AuthorizationService(IRepositoryManager repositoryManager, IMapper mapper, IOptions<JwtSettings> jwtSettings,
+                                    IValidator<SingUpModel> singUpValidator, IValidator<ConfirmEmailModel> confirmEmailValidator)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _singUpValidator = singUpValidator;
+            _confirmEmailValidator = confirmEmailValidator;
             _jwtSettings = jwtSettings.Value;
         }
 
         public async Task<UserDTO> SingUpAsync(SingUpModel model, RoleDTO role, CancellationToken cancellationToken = default)
         {
-            await ValidateModel(model, new SingUpValidator(), cancellationToken);
+            await ValidateModel(model, _singUpValidator, cancellationToken);
 
             if (await _repositoryManager.UserRepository
                 .IsItemExistAsync(x => x.Email == model.Email, cancellationToken))
@@ -46,7 +51,7 @@ namespace AuthorizationAPI.Services
 
         public async Task ConfirmEmailAsync(ConfirmEmailModel model, CancellationToken cancellationToken = default)
         {
-            await ValidateModel(model, new ConfirmEmailValidator(), cancellationToken);
+            await ValidateModel(model, _confirmEmailValidator, cancellationToken);
 
             var user = _repositoryManager.UserRepository
                 .GetItemsByCondition(x => x.Id == model.Id, true)

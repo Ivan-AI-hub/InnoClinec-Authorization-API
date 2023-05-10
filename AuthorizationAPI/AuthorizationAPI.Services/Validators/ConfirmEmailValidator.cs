@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace AuthorizationAPI.Services.Validators
 {
-    internal class ConfirmEmailValidator : AbstractValidator<ConfirmEmailModel>
+    public class ConfirmEmailValidator : AbstractValidator<ConfirmEmailModel>
     {
         public ConfirmEmailValidator()
         {
