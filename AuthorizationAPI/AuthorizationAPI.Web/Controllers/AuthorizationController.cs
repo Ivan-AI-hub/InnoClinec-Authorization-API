@@ -27,14 +27,12 @@ namespace AuthorizationAPI.Web.Controllers
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         public async Task<IActionResult> SingUpAsync(string email, string password, string rePassword, CancellationToken cancellationToken = default)
         {
-            var result = await _authorizationService.SingUpPatientAsync(email, password, rePassword, cancellationToken);
-            if (!result.IsComplite)
-                return BadRequest(new ErrorDetails(400, result.Errors));
+            var user = await _authorizationService.SingUpPatientAsync(email, password, rePassword, cancellationToken);
 
             string url = HttpContext.Request.Host.Value;
-            await _emailService.SendEmailAsync(result.Value.Email,
+            await _emailService.SendEmailAsync(user.Email,
                                                "Confirm email address",
-                                               $"<a href='https://{url}/confirm/{result.Value.Id}'>Тыкни чтобы подтвердить</a>",
+                                               $"<a href='https://{url}/confirm/{user.Id}'>Тыкни чтобы подтвердить</a>",
                                                cancellationToken);
             return Ok();
         }
@@ -48,10 +46,7 @@ namespace AuthorizationAPI.Web.Controllers
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         public async Task<IActionResult> ConfirmEmailAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var result = await _authorizationService.ConfirmEmailAsync(id, cancellationToken);
-            if (!result.IsComplite)
-                return BadRequest(new ErrorDetails(400, result.Errors));
-
+            await _authorizationService.ConfirmEmailAsync(id, cancellationToken);
             return Ok();
         }
 
@@ -62,11 +57,9 @@ namespace AuthorizationAPI.Web.Controllers
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         public async Task<IActionResult> SingInAsync(string email, string password, CancellationToken cancellationToken = default)
         {
-            var result = await _authorizationService.GetAccessTokenAsync(email, password, cancellationToken);
-            if (!result.IsComplite)
-                return BadRequest(new ErrorDetails(400, result.Errors));
+            var accessToken = await _authorizationService.GetAccessTokenAsync(email, password, cancellationToken);
 
-            return Ok(result.Value);
+            return Ok(accessToken);
         }
     }
 }

@@ -6,24 +6,15 @@ namespace AuthorizationAPI.DAL.Repositories
     public class RepositoryManager : IRepositoryManager
     {
         private AuthorizationContext _context;
-        private IServiceProvider _serviceProvider;
 
-        private IUserRepository _userRepository;
-        public RepositoryManager(AuthorizationContext context, IServiceProvider serviceProvider)
+        private Lazy<IUserRepository> _userRepository;
+        public RepositoryManager(AuthorizationContext context)
         {
             _context = context;
-            _serviceProvider = serviceProvider;
+            _userRepository = new Lazy<IUserRepository>(() => new UserRepository(context));
         }
 
-        public IUserRepository UserRepository
-        {
-            get
-            {
-                if (_userRepository == null)
-                    _userRepository = _serviceProvider.GetRequiredService<IUserRepository>();
-                return _userRepository;
-            }
-        }
+        public IUserRepository UserRepository => _userRepository.Value;
 
         public Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {

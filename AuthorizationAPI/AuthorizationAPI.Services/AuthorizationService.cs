@@ -2,8 +2,8 @@
 using AuthorizationAPI.Application.Commands.Users.Create;
 using AuthorizationAPI.Application.Queries.Users.GetByEmailAndPassword;
 using AuthorizationAPI.Domain;
+using AuthorizationAPI.Domain.Exceptions;
 using AuthorizationAPI.Services.Models;
-using AuthorizationAPI.Services.Results;
 using MediatR;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -29,33 +29,27 @@ namespace AuthorizationAPI.Services
         /// <param name="email">patient email</param>
         /// <param name="password">patient password</param>
         /// <param name="rePassword">patient repassword</param>
-        public async Task<ServiceValueResult<User>> SingUpPatientAsync(string email, string password, string rePassword,
+        public async Task<User> SingUpPatientAsync(string email, string password, string rePassword,
                                                                         CancellationToken cancellationToken = default)
         {
-            var result = await _mediator.Send(new CreateUser(email, password, rePassword, Role.Patient), cancellationToken);
-            return new ServiceValueResult<User>(result);
+            return await _mediator.Send(new CreateUser(email, password, rePassword, Role.Patient), cancellationToken);
         }
 
         /// <summary>
         /// Confirms email for the user with id = <paramref name="id"/>
         /// </summary>
         /// <param name="id">User id</param>
-        public async Task<ServiceVoidResult> ConfirmEmailAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task ConfirmEmailAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var result = await _mediator.Send(new ConfirmUserEmail(id), cancellationToken);
-            return new ServiceVoidResult(result);
+             await _mediator.Send(new ConfirmUserEmail(id), cancellationToken);
         }
 
-        public async Task<ServiceValueResult<string>> GetAccessTokenAsync(string email, string password, CancellationToken cancellationToken = default)
+        public async Task<string> GetAccessTokenAsync(string email, string password, CancellationToken cancellationToken = default)
         {
-            var result = await _mediator.Send(new GetUserByEmailAndPassword(email, password), cancellationToken);
-            if (!result.IsComplite)
-                return new ServiceValueResult<string>(null, result.Errors.ToArray());
-
-            var user = result.Value;
+            var user = await _mediator.Send(new GetUserByEmailAndPassword(email, password), cancellationToken);
 
             if (!user.IsEmailConfirmed)
-                return new ServiceValueResult<string>(null, "User`s email has not been confirmed");
+                throw new UserEmailNotConfirmedException(user.Email);
 
             var claims = new List<Claim>
             {
@@ -73,7 +67,7 @@ namespace AuthorizationAPI.Services
                     expires: DateTime.UtcNow.AddMinutes(_jwtSettings.Expires),
                     signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256));
 
-            return new ServiceValueResult<string>(new JwtSecurityTokenHandler().WriteToken(jwt));
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
     }
 }

@@ -1,13 +1,13 @@
-﻿using AuthorizationAPI.Application.Results;
-using AuthorizationAPI.Application.StaticHelpers;
+﻿using AuthorizationAPI.Application.StaticHelpers;
 using AuthorizationAPI.Domain;
+using AuthorizationAPI.Domain.Exceptions;
 using AuthorizationAPI.Domain.Interfaces;
 using FluentValidation;
 using MediatR;
 
 namespace AuthorizationAPI.Application.Queries.Users.GetByEmailAndPassword
 {
-    internal class GetUserByEmailAndPasswordHandler : IRequestHandler<GetUserByEmailAndPassword, ApplicationValueResult<User>>
+    internal class GetUserByEmailAndPasswordHandler : IRequestHandler<GetUserByEmailAndPassword, User>
     {
         private IRepositoryManager _repositoryManager;
         private IValidator<GetUserByEmailAndPassword> _validator;
@@ -16,20 +16,20 @@ namespace AuthorizationAPI.Application.Queries.Users.GetByEmailAndPassword
             _repositoryManager = repositoryManager;
             _validator = validator;
         }
-        public Task<ApplicationValueResult<User>> Handle(GetUserByEmailAndPassword request, CancellationToken cancellationToken)
+        public Task<User> Handle(GetUserByEmailAndPassword request, CancellationToken cancellationToken)
         {
             var validationResult = _validator.Validate(request);
             if (!validationResult.IsValid)
-                return Task.FromResult(new ApplicationValueResult<User>(validationResult));
+                throw new ValidationException(validationResult.Errors);
 
             var user = _repositoryManager.UserRepository
                 .GetItemsByCondition(x => x.Email == request.Email && x.PasswordHach == Hacher.StringToHach(request.Password), false)
                 .FirstOrDefault();
 
             if (user == null)
-                return Task.FromResult(new ApplicationValueResult<User>(null, "User does not exist."));
+                throw new UserAuthenticationException();
 
-            return Task.FromResult(new ApplicationValueResult<User>(user));
+            return Task.FromResult(user);
         }
     }
 }
