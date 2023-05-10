@@ -1,6 +1,7 @@
-﻿using AuthorizationAPI.Domain.Repositories;
+﻿using AuthorizationAPI.Persistence.Repositories;
+using AuthorizationAPI.Domain.Repositories;
 
-namespace AuthorizationAPI.DAL.Repositories
+namespace AuthorizationAPI.Persistence.Repositories
 {
     public class RepositoryManager : IRepositoryManager
     {

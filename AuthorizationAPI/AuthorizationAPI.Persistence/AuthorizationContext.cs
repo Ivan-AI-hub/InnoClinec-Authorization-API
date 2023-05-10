@@ -1,8 +1,8 @@
-﻿using AuthorizationAPI.DAL.EntityConfiguration;
+﻿using AuthorizationAPI.Persistence.EntityConfiguration;
 using AuthorizationAPI.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthorizationAPI.DAL
+namespace AuthorizationAPI.Persistence
 {
     public class AuthorizationContext : DbContext
     {

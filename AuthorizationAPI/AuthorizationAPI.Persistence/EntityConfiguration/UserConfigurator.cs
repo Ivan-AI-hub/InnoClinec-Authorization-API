@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AuthorizationAPI.DAL.EntityConfiguration
+namespace AuthorizationAPI.Persistence.EntityConfiguration
 {
     internal class UserConfigurator : IEntityTypeConfiguration<User>
     {

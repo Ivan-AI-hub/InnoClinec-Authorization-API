@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.Domain", "AuthorizationAPI.Domain\AuthorizationAPI.Domain.csproj", "{80015514-2DA4-480D-8DAD-28DFDC2FBEB0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.DAL", "AuthorizationAPI.DAL\AuthorizationAPI.DAL.csproj", "{DACBAFEE-E2FE-43D5-BDC6-53D23F5653B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.Persistence", "AuthorizationAPI.Persistence\AuthorizationAPI.Persistence.csproj", "{DACBAFEE-E2FE-43D5-BDC6-53D23F5653B7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.Web", "AuthorizationAPI.Web\AuthorizationAPI.Web.csproj", "{57F23DAE-6D0A-4E52-BC2E-41B60CD9F852}"
 EndProject

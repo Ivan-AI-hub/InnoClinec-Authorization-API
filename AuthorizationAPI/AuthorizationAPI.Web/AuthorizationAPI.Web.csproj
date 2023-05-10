@@ -19,8 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AuthorizationAPI.DAL\AuthorizationAPI.DAL.csproj" />
+    <ProjectReference Include="..\AuthorizationAPI.Domain\AuthorizationAPI.Domain.csproj" />
+    <ProjectReference Include="..\AuthorizationAPI.Persistence\AuthorizationAPI.Persistence.csproj" />
     <ProjectReference Include="..\AuthorizationAPI.Presentation\AuthorizationAPI.Presentation.csproj" />
+    <ProjectReference Include="..\AuthorizationAPI.Services.Abstractions\AuthorizationAPI.Services.Abstractions.csproj" />
     <ProjectReference Include="..\AuthorizationAPI.Services\AuthorizationAPI.Services.csproj" />
   </ItemGroup>
 

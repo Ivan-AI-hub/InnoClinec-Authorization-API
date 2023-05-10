@@ -1,6 +1,6 @@
-﻿using AuthorizationAPI.DAL;
-using AuthorizationAPI.DAL.Repositories;
-using AuthorizationAPI.Domain.Repositories;
+﻿using AuthorizationAPI.Domain.Repositories;
+using AuthorizationAPI.Persistence;
+using AuthorizationAPI.Persistence.Repositories;
 using AuthorizationAPI.Presentation;
 using AuthorizationAPI.Services;
 using AuthorizationAPI.Services.Abstractions;

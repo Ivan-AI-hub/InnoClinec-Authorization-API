@@ -1,9 +1,9 @@
-﻿using AuthorizationAPI.DAL.Abstracts;
-using AuthorizationAPI.Domain;
+﻿using AuthorizationAPI.Domain;
 using AuthorizationAPI.Domain.Repositories;
+using AuthorizationAPI.Persistence.Abstracts;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthorizationAPI.DAL.Repositories
+namespace AuthorizationAPI.Persistence.Repositories
 {
     public class UserRepository : RepositoryBase<User>, IUserRepository
     {

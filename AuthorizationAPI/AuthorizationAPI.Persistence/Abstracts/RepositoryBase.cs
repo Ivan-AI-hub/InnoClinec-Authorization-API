@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace AuthorizationAPI.DAL.Abstracts
+namespace AuthorizationAPI.Persistence.Abstracts
 {
     public abstract class RepositoryBase<T> : IRepository<T>
         where T : class
