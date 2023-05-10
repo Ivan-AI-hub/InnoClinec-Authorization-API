@@ -1,9 +1,6 @@
-using AuthorizationAPI.Application.Commands.Users.Create;
-using AuthorizationAPI.Application.Validators;
 using AuthorizationAPI.Services.Models;
 using AuthorizationAPI.Web.Extensions;
-using FluentValidation;
-using MediatR;
+using AuthorizationAPI.Web.Middlewares;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,9 +16,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
 );
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateUser).Assembly));
-builder.Services.AddValidatorsFromAssemblyContaining<AddUserValidator>();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthorization();
 
@@ -35,7 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

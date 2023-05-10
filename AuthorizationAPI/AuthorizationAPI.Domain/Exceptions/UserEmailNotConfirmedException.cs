@@ -2,7 +2,7 @@
 {
     public class UserEmailNotConfirmedException : BadRequestException
     {
-        public UserEmailNotConfirmedException(string email) 
+        public UserEmailNotConfirmedException(string email)
             : base($"The email address {email} has not been confirmed")
         {
         }

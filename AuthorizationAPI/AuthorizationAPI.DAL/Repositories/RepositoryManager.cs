@@ -1,5 +1,4 @@
-﻿using AuthorizationAPI.Domain.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
+﻿using AuthorizationAPI.Domain.Repositories;
 
 namespace AuthorizationAPI.DAL.Repositories
 {

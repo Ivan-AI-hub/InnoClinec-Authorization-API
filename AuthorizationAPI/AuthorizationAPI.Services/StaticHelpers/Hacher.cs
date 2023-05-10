@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace AuthorizationAPI.Application.StaticHelpers
+namespace AuthorizationAPI.Services.StaticHelpers
 {
     internal static class Hacher
     {

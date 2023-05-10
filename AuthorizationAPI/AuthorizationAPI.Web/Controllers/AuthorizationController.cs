@@ -1,4 +1,6 @@
-﻿using AuthorizationAPI.Services;
+﻿using AuthorizationAPI.Domain;
+using AuthorizationAPI.Services;
+using AuthorizationAPI.Services.Models;
 using AuthorizationAPI.Web.Models.ErrorModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,18 +25,15 @@ namespace AuthorizationAPI.Web.Controllers
         /// <param name="password">User password</param>
         /// <param name="rePassword">User password for validation</param>
         [HttpPost("singUp")]
+        [AllowAnonymous]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
-        public async Task<IActionResult> SingUpAsync(string email, string password, string rePassword, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> SingUpAsync(string email, string password, string rePassword,
+            CancellationToken cancellationToken = default)
         {
-            var user = await _authorizationService.SingUpPatientAsync(email, password, rePassword, cancellationToken);
-
-            string url = HttpContext.Request.Host.Value;
-            await _emailService.SendEmailAsync(user.Email,
-                                               "Confirm email address",
-                                               $"<a href='https://{url}/confirm/{user.Id}'>Тыкни чтобы подтвердить</a>",
-                                               cancellationToken);
-            return Ok();
+            var user = await _authorizationService.SingUpAsync(new SingUpModel(email, password, rePassword, Role.Patient), cancellationToken);
+            await SendEmailVerificationMessageAsync(user, cancellationToken);
+            return Ok(user);
         }
 
         /// <summary>
@@ -44,9 +43,9 @@ namespace AuthorizationAPI.Web.Controllers
         [HttpGet("confirm/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
-        public async Task<IActionResult> ConfirmEmailAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> ConfirmEmailAsync(ConfirmEmailModel confirmEmailModel, CancellationToken cancellationToken = default)
         {
-            await _authorizationService.ConfirmEmailAsync(id, cancellationToken);
+            await _authorizationService.ConfirmEmailAsync(confirmEmailModel, cancellationToken);
             return Ok();
         }
 
@@ -58,8 +57,16 @@ namespace AuthorizationAPI.Web.Controllers
         public async Task<IActionResult> SingInAsync(string email, string password, CancellationToken cancellationToken = default)
         {
             var accessToken = await _authorizationService.GetAccessTokenAsync(email, password, cancellationToken);
-
             return Ok(accessToken);
+        }
+
+        private async Task SendEmailVerificationMessageAsync(User user, CancellationToken cancellationToken = default)
+        {
+            string url = HttpContext.Request.Host.Value;
+            await _emailService.SendEmailAsync(user.Email,
+                                               "Confirm email address",
+                                               $"<a href='https://{url}/confirm/{user.Id}'>Тыкни чтобы подтвердить</a>",
+                                               cancellationToken);
         }
     }
 }

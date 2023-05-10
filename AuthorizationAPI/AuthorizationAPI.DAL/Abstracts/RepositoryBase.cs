@@ -1,4 +1,4 @@
-﻿using AuthorizationAPI.Domain.Interfaces;
+﻿using AuthorizationAPI.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Transactions;
@@ -30,8 +30,6 @@ namespace AuthorizationAPI.DAL.Abstracts
 
         public Task<bool> IsItemExistAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            var t = new CommittableTransaction(new TransactionOptions { IsolationLevel = IsolationLevel.Serializable });
-            Context.Database.EnlistTransaction(t);
             return Context.Set<T>().AnyAsync(predicate, cancellationToken);
         }
 
