@@ -1,6 +1,5 @@
-﻿using AuthorizationAPI.Domain;
-using AuthorizationAPI.Services;
-using AuthorizationAPI.Services.Models;
+﻿using AuthorizationAPI.Services;
+using AuthorizationAPI.Services.Abstractions.Models;
 using AuthorizationAPI.Web.Models.ErrorModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,10 +27,9 @@ namespace AuthorizationAPI.Web.Controllers
         [AllowAnonymous]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
-        public async Task<IActionResult> SingUpAsync(string email, string password, string rePassword,
-            CancellationToken cancellationToken = default)
+        public async Task<IActionResult> SingUpAsync(SingUpModel singUpModel, CancellationToken cancellationToken = default)
         {
-            var user = await _authorizationService.SingUpAsync(new SingUpModel(email, password, rePassword, Role.Patient), cancellationToken);
+            var user = await _authorizationService.SingUpAsync(singUpModel, RoleDTO.Patient, cancellationToken);
             await SendEmailVerificationMessageAsync(user, cancellationToken);
             return Ok(user);
         }
@@ -54,13 +52,13 @@ namespace AuthorizationAPI.Web.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(String), 200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
-        public async Task<IActionResult> SingInAsync(string email, string password, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> SingInAsync(GetAccessTokenModel getAccessTokenModel, CancellationToken cancellationToken = default)
         {
-            var accessToken = await _authorizationService.GetAccessTokenAsync(email, password, cancellationToken);
+            var accessToken = await _authorizationService.GetAccessTokenAsync(getAccessTokenModel, cancellationToken);
             return Ok(accessToken);
         }
 
-        private async Task SendEmailVerificationMessageAsync(User user, CancellationToken cancellationToken = default)
+        private async Task SendEmailVerificationMessageAsync(UserDTO user, CancellationToken cancellationToken = default)
         {
             string url = HttpContext.Request.Host.Value;
             await _emailService.SendEmailAsync(user.Email,

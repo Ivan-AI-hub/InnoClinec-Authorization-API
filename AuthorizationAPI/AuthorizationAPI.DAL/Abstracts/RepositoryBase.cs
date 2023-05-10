@@ -1,7 +1,6 @@
 ﻿using AuthorizationAPI.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Transactions;
 
 namespace AuthorizationAPI.DAL.Abstracts
 {

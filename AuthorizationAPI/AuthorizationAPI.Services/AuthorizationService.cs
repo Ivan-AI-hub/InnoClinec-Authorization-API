@@ -1,9 +1,12 @@
 ﻿using AuthorizationAPI.Domain;
 using AuthorizationAPI.Domain.Exceptions;
 using AuthorizationAPI.Domain.Repositories;
-using AuthorizationAPI.Services.Models;
+using AuthorizationAPI.Services.Abstractions;
+using AuthorizationAPI.Services.Abstractions.Models;
+using AuthorizationAPI.Services.Settings;
 using AuthorizationAPI.Services.StaticHelpers;
 using AuthorizationAPI.Services.Validators;
+using AutoMapper;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -13,13 +16,15 @@ using System.Text;
 
 namespace AuthorizationAPI.Services
 {
-    public class AuthorizationService
+    public class AuthorizationService : IAuthorizationService
     {
         private IRepositoryManager _repositoryManager;
+        private IMapper _mapper;
         private readonly JwtSettings _jwtSettings;
-        public AuthorizationService(IRepositoryManager repositoryManager, IOptions<JwtSettings> jwtSettings)
+        public AuthorizationService(IRepositoryManager repositoryManager, IMapper mapper, IOptions<JwtSettings> jwtSettings)
         {
             _repositoryManager = repositoryManager;
+            _mapper = mapper;
             _jwtSettings = jwtSettings.Value;
         }
 
@@ -29,7 +34,7 @@ namespace AuthorizationAPI.Services
         /// <param name="email">patient email</param>
         /// <param name="password">patient password</param>
         /// <param name="rePassword">patient repassword</param>
-        public async Task<User> SingUpAsync(SingUpModel model, CancellationToken cancellationToken = default)
+        public async Task<UserDTO> SingUpAsync(SingUpModel model, RoleDTO role, CancellationToken cancellationToken = default)
         {
             var validator = new SingUpValidator();
             var validationResult = validator.Validate(model);
@@ -40,12 +45,12 @@ namespace AuthorizationAPI.Services
                 .IsItemExistAsync(x => x.Email == model.Email, cancellationToken))
                 throw new EmailAreNotUniqueException();
 
-            var user = new User(model.Email, model.Role, Hacher.StringToHach(model.Password));
+            var user = new User(model.Email, _mapper.Map<Role>(role), Hacher.StringToHach(model.Password));
 
             _repositoryManager.UserRepository.Create(user);
             await _repositoryManager.SaveChangesAsync(cancellationToken);
 
-            return user;
+            return _mapper.Map<UserDTO>(user);
         }
 
         /// <summary>
@@ -72,17 +77,16 @@ namespace AuthorizationAPI.Services
             await _repositoryManager.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<string> GetAccessTokenAsync(string email, string password, CancellationToken cancellationToken = default)
+        public async Task<string> GetAccessTokenAsync(GetAccessTokenModel model, CancellationToken cancellationToken = default)
         {
             var validator = new GetUserByEmailAndPasswordValidator();
-            var request = new GetUserByEmailAndPassword(email, password);
 
-            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+            var validationResult = await validator.ValidateAsync(model, cancellationToken);
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
 
             var user = _repositoryManager.UserRepository
-                    .GetItemsByCondition(x => x.Email == request.Email && x.PasswordHach == Hacher.StringToHach(request.Password), false)
+                    .GetItemsByCondition(x => x.Email == model.Email && x.PasswordHach == Hacher.StringToHach(model.Password), false)
                     .FirstOrDefault();
 
             if (user == null)

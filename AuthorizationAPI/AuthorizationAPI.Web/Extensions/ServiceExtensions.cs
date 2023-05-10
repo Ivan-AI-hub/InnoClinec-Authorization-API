@@ -2,7 +2,7 @@
 using AuthorizationAPI.DAL.Repositories;
 using AuthorizationAPI.Domain.Repositories;
 using AuthorizationAPI.Services;
-using AuthorizationAPI.Services.Models;
+using AuthorizationAPI.Services.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

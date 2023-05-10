@@ -1,4 +1,4 @@
-﻿using AuthorizationAPI.Services.Models;
+﻿using AuthorizationAPI.Services.Abstractions.Models;
 using FluentValidation;
 
 namespace AuthorizationAPI.Services.Validators

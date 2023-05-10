@@ -1,3 +1,4 @@
+using AuthorizationAPI.Services.Mappings;
 using AuthorizationAPI.Services.Models;
 using AuthorizationAPI.Web.Extensions;
 using AuthorizationAPI.Web.Middlewares;
@@ -18,7 +19,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthorization();
-
+builder.Services.AddAutoMapper(typeof(ServiceMappingProfile));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettingsConfig"));
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettingsConfig"));
 
