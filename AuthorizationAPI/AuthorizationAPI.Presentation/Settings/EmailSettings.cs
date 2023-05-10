@@ -1,4 +1,4 @@
-﻿namespace AuthorizationAPI.Services.Models
+﻿namespace AuthorizationAPI.Presentation.Settings
 {
     public class EmailSettings
     {

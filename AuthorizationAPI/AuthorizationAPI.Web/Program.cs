@@ -1,8 +1,9 @@
+using AuthorizationAPI.Presentation.Controllers;
+using AuthorizationAPI.Presentation.Settings;
 using AuthorizationAPI.Services.Mappings;
-using AuthorizationAPI.Services.Models;
+using AuthorizationAPI.Services.Settings;
 using AuthorizationAPI.Web.Extensions;
 using AuthorizationAPI.Web.Middlewares;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +14,8 @@ builder.Services.ConfigureSwagger();
 builder.Services.ConfigureServices();
 builder.Services.ConfigureJWT(builder.Configuration);
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
-);
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(AuthorizationController).Assembly);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthorization();

@@ -1,17 +1,16 @@
-﻿using AuthorizationAPI.Services;
+﻿using AuthorizationAPI.Presentation.Models.ErrorModels;
+using AuthorizationAPI.Services.Abstractions;
 using AuthorizationAPI.Services.Abstractions.Models;
-using AuthorizationAPI.Web.Models.ErrorModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AuthorizationAPI.Web.Controllers
+namespace AuthorizationAPI.Presentation.Controllers
 {
     [Route("/")]
-    public class AuthorizationController : Controller
+    public class AuthorizationController : ControllerBase
     {
-        private AuthorizationService _authorizationService;
+        private IAuthorizationService _authorizationService;
         private EmailService _emailService;
-        public AuthorizationController(AuthorizationService authorizationService, EmailService emailService)
+        public AuthorizationController(IAuthorizationService authorizationService, EmailService emailService)
         {
             _authorizationService = authorizationService;
             _emailService = emailService;
@@ -24,7 +23,6 @@ namespace AuthorizationAPI.Web.Controllers
         /// <param name="password">User password</param>
         /// <param name="rePassword">User password for validation</param>
         [HttpPost("singUp")]
-        [AllowAnonymous]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         public async Task<IActionResult> SingUpAsync(SingUpModel singUpModel, CancellationToken cancellationToken = default)
@@ -49,8 +47,7 @@ namespace AuthorizationAPI.Web.Controllers
 
         /// <returns>access token for user witn same email and password</returns>
         [HttpGet("SingIn")]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(String), 200)]
+        [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         public async Task<IActionResult> SingInAsync(GetAccessTokenModel getAccessTokenModel, CancellationToken cancellationToken = default)
         {

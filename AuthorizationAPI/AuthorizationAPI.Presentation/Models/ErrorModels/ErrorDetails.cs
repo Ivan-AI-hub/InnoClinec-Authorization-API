@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace AuthorizationAPI.Web.Models.ErrorModels
+namespace AuthorizationAPI.Presentation.Models.ErrorModels
 {
     public class ErrorDetails
     {

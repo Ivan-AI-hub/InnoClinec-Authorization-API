@@ -19,11 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AuthorizationAPI.DAL\AuthorizationAPI.DAL.csproj" />
+    <ProjectReference Include="..\AuthorizationAPI.Presentation\AuthorizationAPI.Presentation.csproj" />
     <ProjectReference Include="..\AuthorizationAPI.Services\AuthorizationAPI.Services.csproj" />
   </ItemGroup>
 

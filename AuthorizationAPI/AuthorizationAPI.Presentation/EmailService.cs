@@ -1,10 +1,10 @@
-﻿using AuthorizationAPI.Services.Models;
+﻿using AuthorizationAPI.Presentation.Settings;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace AuthorizationAPI.Services
+namespace AuthorizationAPI.Presentation
 {
     public class EmailService
     {

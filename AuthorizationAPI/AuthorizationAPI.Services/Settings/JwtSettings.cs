@@ -1,4 +1,4 @@
-﻿namespace AuthorizationAPI.Services.Models
+﻿namespace AuthorizationAPI.Services.Settings
 {
     public class JwtSettings
     {

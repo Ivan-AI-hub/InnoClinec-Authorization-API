@@ -1,7 +1,9 @@
 ﻿using AuthorizationAPI.DAL;
 using AuthorizationAPI.DAL.Repositories;
 using AuthorizationAPI.Domain.Repositories;
+using AuthorizationAPI.Presentation;
 using AuthorizationAPI.Services;
+using AuthorizationAPI.Services.Abstractions;
 using AuthorizationAPI.Services.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +30,7 @@ namespace AuthorizationAPI.Web.Extensions
         }
         public static void ConfigureServices(this IServiceCollection services)
         {
-            services.AddScoped<AuthorizationService>();
+            services.AddScoped<IAuthorizationService, AuthorizationService>();
             services.AddScoped<EmailService>();
         }
 

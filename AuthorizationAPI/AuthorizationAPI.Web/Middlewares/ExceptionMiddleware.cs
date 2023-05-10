@@ -1,5 +1,5 @@
 ﻿using AuthorizationAPI.Domain.Exceptions;
-using AuthorizationAPI.Web.Models.ErrorModels;
+using AuthorizationAPI.Presentation.Models.ErrorModels;
 using System.Net;
 
 namespace AuthorizationAPI.Web.Middlewares
