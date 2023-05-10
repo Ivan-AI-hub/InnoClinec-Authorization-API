@@ -4,8 +4,16 @@ namespace AuthorizationAPI.Services.Abstractions
 {
     public interface IAuthorizationService
     {
+
+        /// <summary>
+        /// Confirms email for the user with a specific id
+        /// </summary>
         Task ConfirmEmailAsync(ConfirmEmailModel model, CancellationToken cancellationToken = default);
-        Task<string> GetAccessTokenAsync(GetAccessTokenModel model, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Registers the patient in system
+        /// </summary>
         Task<UserDTO> SingUpAsync(SingUpModel model, RoleDTO role, CancellationToken cancellationToken = default);
+        public string GetAccessToken(string email, string password);
     }
 }

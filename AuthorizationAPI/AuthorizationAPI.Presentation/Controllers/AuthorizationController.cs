@@ -49,9 +49,9 @@ namespace AuthorizationAPI.Presentation.Controllers
         [HttpGet("SingIn")]
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
-        public async Task<IActionResult> SingInAsync(GetAccessTokenModel getAccessTokenModel, CancellationToken cancellationToken = default)
+        public IActionResult SingIn(string email, string password)
         {
-            var accessToken = await _authorizationService.GetAccessTokenAsync(getAccessTokenModel, cancellationToken);
+            var accessToken = _authorizationService.GetAccessToken(email, password);
             return Ok(accessToken);
         }
 

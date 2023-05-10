@@ -1,5 +1,4 @@
-﻿using AuthorizationAPI.Persistence.Repositories;
-using AuthorizationAPI.Domain.Repositories;
+﻿using AuthorizationAPI.Domain.Repositories;
 
 namespace AuthorizationAPI.Persistence.Repositories
 {

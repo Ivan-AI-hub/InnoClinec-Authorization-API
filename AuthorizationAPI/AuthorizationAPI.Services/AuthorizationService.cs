@@ -28,18 +28,9 @@ namespace AuthorizationAPI.Services
             _jwtSettings = jwtSettings.Value;
         }
 
-        /// <summary>
-        /// Registers the patient in system
-        /// </summary>
-        /// <param name="email">patient email</param>
-        /// <param name="password">patient password</param>
-        /// <param name="rePassword">patient repassword</param>
         public async Task<UserDTO> SingUpAsync(SingUpModel model, RoleDTO role, CancellationToken cancellationToken = default)
         {
-            var validator = new SingUpValidator();
-            var validationResult = validator.Validate(model);
-            if (!validationResult.IsValid)
-                throw new ValidationException(validationResult.Errors);
+            await ValidateModel(model, new SingUpValidator(), cancellationToken);
 
             if (await _repositoryManager.UserRepository
                 .IsItemExistAsync(x => x.Email == model.Email, cancellationToken))
@@ -53,20 +44,14 @@ namespace AuthorizationAPI.Services
             return _mapper.Map<UserDTO>(user);
         }
 
-        /// <summary>
-        /// Confirms email for the user with id = <paramref name="id"/>
-        /// </summary>
-        /// <param name="id">User id</param>
         public async Task ConfirmEmailAsync(ConfirmEmailModel model, CancellationToken cancellationToken = default)
         {
-            var validator = new ConfirmEmailValidator();
-            var validationResult = validator.Validate(model);
-            if (!validationResult.IsValid)
-                throw new ValidationException(validationResult.Errors);
+            await ValidateModel(model, new ConfirmEmailValidator(), cancellationToken);
 
             var user = _repositoryManager.UserRepository
                 .GetItemsByCondition(x => x.Id == model.Id, true)
                 .FirstOrDefault();
+
             if (user == null)
                 throw new UserNotFoundException(model.Id);
 
@@ -77,16 +62,10 @@ namespace AuthorizationAPI.Services
             await _repositoryManager.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<string> GetAccessTokenAsync(GetAccessTokenModel model, CancellationToken cancellationToken = default)
+        public string GetAccessToken(string email, string password)
         {
-            var validator = new GetUserByEmailAndPasswordValidator();
-
-            var validationResult = await validator.ValidateAsync(model, cancellationToken);
-            if (!validationResult.IsValid)
-                throw new ValidationException(validationResult.Errors);
-
             var user = _repositoryManager.UserRepository
-                    .GetItemsByCondition(x => x.Email == model.Email && x.PasswordHach == Hacher.StringToHach(model.Password), false)
+                    .GetItemsByCondition(x => x.Email == email && x.PasswordHach == Hacher.StringToHach(password), false)
                     .FirstOrDefault();
 
             if (user == null)
@@ -118,6 +97,13 @@ namespace AuthorizationAPI.Services
                     signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256));
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
+        }
+
+        private async Task ValidateModel<Tmodel>(Tmodel model, IValidator<Tmodel> validator, CancellationToken cancellationToken = default)
+        {
+            var validationResult = await validator.ValidateAsync(model, cancellationToken);
+            if (!validationResult.IsValid)
+                throw new ValidationException(validationResult.Errors);
         }
     }
 }

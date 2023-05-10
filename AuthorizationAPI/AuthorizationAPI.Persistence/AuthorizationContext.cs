@@ -1,5 +1,5 @@
-﻿using AuthorizationAPI.Persistence.EntityConfiguration;
-using AuthorizationAPI.Domain;
+﻿using AuthorizationAPI.Domain;
+using AuthorizationAPI.Persistence.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthorizationAPI.Persistence
