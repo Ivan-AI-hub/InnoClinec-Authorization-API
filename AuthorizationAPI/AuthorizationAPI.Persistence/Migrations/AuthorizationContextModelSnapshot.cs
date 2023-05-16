@@ -4,19 +4,16 @@ using AuthorizationAPI.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AuthorizationAPI.Web.Migrations
+namespace AuthorizationAPI.Persistence.Migrations
 {
     [DbContext(typeof(AuthorizationContext))]
-    [Migration("20230427121317_InitialCreate")]
-    partial class InitialCreate
+    partial class AuthorizationContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

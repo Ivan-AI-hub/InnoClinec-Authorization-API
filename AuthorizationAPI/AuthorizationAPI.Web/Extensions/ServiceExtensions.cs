@@ -21,7 +21,7 @@ namespace AuthorizationAPI.Web.Extensions
             var connection = configuration.GetConnectionString(connectionStringSectionName);
             services.AddDbContext<AuthorizationContext>(options =>
                                 options.UseSqlServer(connection,
-                                b => b.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)));
+                                b => b.MigrationsAssembly(typeof(AuthorizationContext).Assembly.GetName().Name)));
         }
         public static void ConfigureRepositoryManager(this IServiceCollection services)
         {
