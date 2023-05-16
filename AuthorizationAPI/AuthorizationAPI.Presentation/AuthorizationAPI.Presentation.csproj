@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AuthorizationAPI.Services.Abstractions\AuthorizationAPI.Services.Abstractions.csproj" />
+    <ProjectReference Include="..\AuthorizationAPI.Application.Abstractions\AuthorizationAPI.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\AuthorizationAPI.Services.Abstractions\AuthorizationAPI.Application.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

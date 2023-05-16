@@ -7,7 +7,7 @@ namespace AuthorizationAPI.Persistence.Abstracts
     public abstract class RepositoryBase<T> : IRepository<T>
         where T : class
     {
-        protected AuthorizationContext Context;
+        protected readonly AuthorizationContext Context;
         public RepositoryBase(AuthorizationContext context)
         {
             Context = context;

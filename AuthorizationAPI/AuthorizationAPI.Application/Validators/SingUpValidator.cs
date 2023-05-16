@@ -1,7 +1,7 @@
-﻿using AuthorizationAPI.Services.Abstractions.Models;
+﻿using AuthorizationAPI.Application.Abstractions.Models;
 using FluentValidation;
 
-namespace AuthorizationAPI.Services.Validators
+namespace AuthorizationAPI.Application.Validators
 {
     public class SingUpValidator : AbstractValidator<SingUpModel>
     {

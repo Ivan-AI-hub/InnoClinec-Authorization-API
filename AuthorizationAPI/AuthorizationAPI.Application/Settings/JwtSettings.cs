@@ -1,4 +1,4 @@
-﻿namespace AuthorizationAPI.Services.Settings
+﻿namespace AuthorizationAPI.Application.Settings
 {
     public class JwtSettings
     {

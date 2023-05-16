@@ -1,15 +1,14 @@
-﻿using AuthorizationAPI.Domain.Repositories;
+﻿using AuthorizationAPI.Application;
+using AuthorizationAPI.Application.Abstractions;
+using AuthorizationAPI.Application.Settings;
+using AuthorizationAPI.Domain.Repositories;
 using AuthorizationAPI.Persistence;
 using AuthorizationAPI.Persistence.Repositories;
 using AuthorizationAPI.Presentation;
-using AuthorizationAPI.Services;
-using AuthorizationAPI.Services.Abstractions;
-using AuthorizationAPI.Services.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using System.Text;
 
 namespace AuthorizationAPI.Web.Extensions

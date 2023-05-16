@@ -1,11 +1,10 @@
-﻿using AuthorizationAPI.Domain;
+﻿using AuthorizationAPI.Application.Abstractions;
+using AuthorizationAPI.Application.Abstractions.Models;
+using AuthorizationAPI.Application.Settings;
+using AuthorizationAPI.Application.StaticHelpers;
+using AuthorizationAPI.Domain;
 using AuthorizationAPI.Domain.Exceptions;
 using AuthorizationAPI.Domain.Repositories;
-using AuthorizationAPI.Services.Abstractions;
-using AuthorizationAPI.Services.Abstractions.Models;
-using AuthorizationAPI.Services.Settings;
-using AuthorizationAPI.Services.StaticHelpers;
-using AuthorizationAPI.Services.Validators;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.Extensions.Options;
@@ -14,14 +13,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace AuthorizationAPI.Services
+namespace AuthorizationAPI.Application
 {
     public class AuthorizationService : IAuthorizationService
     {
-        private IRepositoryManager _repositoryManager;
-        private IMapper _mapper;
-        private IValidator<SingUpModel> _singUpValidator;
-        private IValidator<ConfirmEmailModel> _confirmEmailValidator;
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly IMapper _mapper;
+        private readonly IValidator<SingUpModel> _singUpValidator;
+        private readonly IValidator<ConfirmEmailModel> _confirmEmailValidator;
         private readonly JwtSettings _jwtSettings;
         public AuthorizationService(IRepositoryManager repositoryManager, IMapper mapper, IOptions<JwtSettings> jwtSettings,
                                     IValidator<SingUpModel> singUpValidator, IValidator<ConfirmEmailModel> confirmEmailValidator)
@@ -39,9 +38,11 @@ namespace AuthorizationAPI.Services
 
             if (await _repositoryManager.UserRepository
                 .IsItemExistAsync(x => x.Email == model.Email, cancellationToken))
+            {
                 throw new EmailAreNotUniqueException();
+            }
 
-            var user = new User(model.Email, _mapper.Map<Role>(role), Hacher.StringToHach(model.Password));
+            var user = new User(model.Email, _mapper.Map<Role>(role), Hasher.StringToHash(model.Password));
 
             _repositoryManager.UserRepository.Create(user);
             await _repositoryManager.SaveChangesAsync(cancellationToken);
@@ -58,10 +59,14 @@ namespace AuthorizationAPI.Services
                 .FirstOrDefault();
 
             if (user == null)
+            {
                 throw new UserNotFoundException(model.Id);
+            }
 
             if (user.IsEmailConfirmed)
+            {
                 throw new UserEmailAlreadyConfirmed(user.Email);
+            }
 
             user.IsEmailConfirmed = true;
             await _repositoryManager.SaveChangesAsync(cancellationToken);
@@ -70,14 +75,18 @@ namespace AuthorizationAPI.Services
         public string GetAccessToken(string email, string password)
         {
             var user = _repositoryManager.UserRepository
-                    .GetItemsByCondition(x => x.Email == email && x.PasswordHach == Hacher.StringToHach(password), false)
+                    .GetItemsByCondition(x => x.Email == email && x.PasswordHach == Hasher.StringToHash(password), false)
                     .FirstOrDefault();
 
             if (user == null)
+            {
                 throw new UserAuthenticationException();
+            }
 
             if (!user.IsEmailConfirmed)
+            {
                 throw new UserEmailNotConfirmedException(user.Email);
+            }
 
             return GenerateJwtToken(user);
         }
@@ -108,7 +117,9 @@ namespace AuthorizationAPI.Services
         {
             var validationResult = await validator.ValidateAsync(model, cancellationToken);
             if (!validationResult.IsValid)
+            {
                 throw new ValidationException(validationResult.Errors);
+            }
         }
     }
 }

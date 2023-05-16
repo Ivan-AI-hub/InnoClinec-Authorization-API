@@ -9,15 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.Persistenc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.Web", "AuthorizationAPI.Web\AuthorizationAPI.Web.csproj", "{57F23DAE-6D0A-4E52-BC2E-41B60CD9F852}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.Services", "AuthorizationAPI.Services\AuthorizationAPI.Services.csproj", "{D8A404FA-1E58-4CE3-B2EE-F3CDB55BD8E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.Application", "AuthorizationAPI.Application\AuthorizationAPI.Application.csproj", "{D8A404FA-1E58-4CE3-B2EE-F3CDB55BD8E7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{9F0C9107-CC00-49A8-A71E-BC7FA5139083}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{005D266E-179C-46C6-BA43-A45A5DC296C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationAPI.Services.Abstractions", "AuthorizationAPI.Services.Abstractions\AuthorizationAPI.Services.Abstractions.csproj", "{27E061C2-1A36-41E0-B7A0-20B1DF616B6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.Application.Abstractions", "AuthorizationAPI.Application.Abstractions\AuthorizationAPI.Application.Abstractions.csproj", "{27E061C2-1A36-41E0-B7A0-20B1DF616B6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationAPI.Presentation", "AuthorizationAPI.Presentation\AuthorizationAPI.Presentation.csproj", "{98C10019-5263-4A6E-9E7D-179C9EBC352E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationAPI.Presentation", "AuthorizationAPI.Presentation\AuthorizationAPI.Presentation.csproj", "{98C10019-5263-4A6E-9E7D-179C9EBC352E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

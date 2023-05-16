@@ -1,8 +1,8 @@
-﻿using AuthorizationAPI.Domain;
-using AuthorizationAPI.Services.Abstractions.Models;
+﻿using AuthorizationAPI.Application.Abstractions.Models;
+using AuthorizationAPI.Domain;
 using AutoMapper;
 
-namespace AuthorizationAPI.Services.Mappings
+namespace AuthorizationAPI.Application.Mappings
 {
     public class ServiceMappingProfile : Profile
     {

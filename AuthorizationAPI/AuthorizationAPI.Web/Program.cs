@@ -1,8 +1,8 @@
+using AuthorizationAPI.Application.Mappings;
+using AuthorizationAPI.Application.Settings;
+using AuthorizationAPI.Application.Validators;
 using AuthorizationAPI.Presentation.Controllers;
 using AuthorizationAPI.Presentation.Settings;
-using AuthorizationAPI.Services.Mappings;
-using AuthorizationAPI.Services.Settings;
-using AuthorizationAPI.Services.Validators;
 using AuthorizationAPI.Web.Extensions;
 using AuthorizationAPI.Web.Middlewares;
 using FluentValidation;

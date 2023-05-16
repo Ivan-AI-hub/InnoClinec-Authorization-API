@@ -1,6 +1,6 @@
-﻿using AuthorizationAPI.Services.Abstractions.Models;
+﻿using AuthorizationAPI.Application.Abstractions.Models;
 
-namespace AuthorizationAPI.Services.Abstractions
+namespace AuthorizationAPI.Application.Abstractions
 {
     public interface IAuthorizationService
     {

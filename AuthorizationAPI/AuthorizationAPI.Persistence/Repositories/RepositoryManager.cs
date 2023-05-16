@@ -4,7 +4,7 @@ namespace AuthorizationAPI.Persistence.Repositories
 {
     public class RepositoryManager : IRepositoryManager
     {
-        private AuthorizationContext _context;
+        private readonly AuthorizationContext _context;
 
         private Lazy<IUserRepository> _userRepository;
         public RepositoryManager(AuthorizationContext context)

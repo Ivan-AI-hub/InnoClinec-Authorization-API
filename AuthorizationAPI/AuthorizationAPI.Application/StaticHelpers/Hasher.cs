@@ -1,11 +1,11 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace AuthorizationAPI.Services.StaticHelpers
+namespace AuthorizationAPI.Application.StaticHelpers
 {
-    internal static class Hacher
+    internal static class Hasher
     {
-        public static string StringToHach(string message)
+        public static string StringToHash(string message)
         {
             using (var hashAlg = MD5.Create())
             {

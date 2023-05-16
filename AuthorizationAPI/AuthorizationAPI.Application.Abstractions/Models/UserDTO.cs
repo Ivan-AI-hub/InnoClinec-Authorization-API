@@ -1,4 +1,4 @@
-﻿namespace AuthorizationAPI.Services.Abstractions.Models
+﻿namespace AuthorizationAPI.Application.Abstractions.Models
 {
     public class UserDTO
     {

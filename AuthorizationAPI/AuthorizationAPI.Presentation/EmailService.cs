@@ -8,7 +8,7 @@ namespace AuthorizationAPI.Presentation
 {
     public class EmailService
     {
-        private EmailSettings _emailSettings;
+        private readonly EmailSettings _emailSettings;
         public EmailService(IOptions<EmailSettings> emailSettings)
         {
             _emailSettings = emailSettings.Value;
