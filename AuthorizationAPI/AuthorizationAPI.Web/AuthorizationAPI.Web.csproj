@@ -24,8 +24,6 @@
     <ProjectReference Include="..\AuthorizationAPI.Domain\AuthorizationAPI.Domain.csproj" />
     <ProjectReference Include="..\AuthorizationAPI.Persistence\AuthorizationAPI.Persistence.csproj" />
     <ProjectReference Include="..\AuthorizationAPI.Presentation\AuthorizationAPI.Presentation.csproj" />
-    <ProjectReference Include="..\AuthorizationAPI.Services.Abstractions\AuthorizationAPI.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\AuthorizationAPI.Services\AuthorizationAPI.Application.csproj" />
   </ItemGroup>
 
 </Project>
