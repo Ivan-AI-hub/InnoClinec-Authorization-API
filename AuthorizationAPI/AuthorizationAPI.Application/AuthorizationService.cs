@@ -45,7 +45,6 @@ namespace AuthorizationAPI.Application
             var user = new User(model.Email, _mapper.Map<Role>(role), Hasher.StringToHash(model.Password));
 
             _repositoryManager.UserRepository.Create(user);
-            await _repositoryManager.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<UserDTO>(user);
         }
@@ -55,7 +54,7 @@ namespace AuthorizationAPI.Application
             await ValidateModel(model, _confirmEmailValidator, cancellationToken);
 
             var user = _repositoryManager.UserRepository
-                .GetItemsByCondition(x => x.Id == model.Id, true)
+                .GetItemsByCondition(x => x.Id == model.Id, false)
                 .FirstOrDefault();
 
             if (user == null)
@@ -69,7 +68,7 @@ namespace AuthorizationAPI.Application
             }
 
             user.IsEmailConfirmed = true;
-            await _repositoryManager.SaveChangesAsync(cancellationToken);
+            _repositoryManager.UserRepository.Update(user);
         }
 
         public string GetAccessToken(string email, string password)

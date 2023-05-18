@@ -41,9 +41,9 @@ namespace AuthorizationAPI.Presentation.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         [ProducesResponseType(typeof(ErrorDetails), 500)]
-        public async Task<IActionResult> ConfirmEmailAsync(ConfirmEmailModel confirmEmailModel, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> ConfirmEmailAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            await _authorizationService.ConfirmEmailAsync(confirmEmailModel, cancellationToken);
+            await _authorizationService.ConfirmEmailAsync(new ConfirmEmailModel(id), cancellationToken);
             return Ok();
         }
 

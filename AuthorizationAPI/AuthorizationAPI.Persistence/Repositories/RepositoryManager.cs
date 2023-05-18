@@ -14,10 +14,5 @@ namespace AuthorizationAPI.Persistence.Repositories
         }
 
         public IUserRepository UserRepository => _userRepository.Value;
-
-        public Task SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            return _context.SaveChangesAsync(cancellationToken);
-        }
     }
 }

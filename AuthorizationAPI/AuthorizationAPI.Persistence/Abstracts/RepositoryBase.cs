@@ -16,15 +16,18 @@ namespace AuthorizationAPI.Persistence.Abstracts
         public virtual void Create(T item)
         {
             Context.Set<T>().Add(item);
+            Context.SaveChanges();
         }
         public virtual void Update(T item)
         {
             Context.Set<T>().Update(item);
+            Context.SaveChanges();
         }
 
         public virtual void Delete(T item)
         {
             Context.Set<T>().Remove(item);
+            Context.SaveChanges();
         }
 
         public Task<bool> IsItemExistAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
