@@ -9,11 +9,9 @@ namespace AuthorizationAPI.Presentation.Controllers
     public class AuthorizationController : ControllerBase
     {
         private readonly IAuthorizationService _authorizationService;
-        private readonly EmailService _emailService;
-        public AuthorizationController(IAuthorizationService authorizationService, EmailService emailService)
+        public AuthorizationController(IAuthorizationService authorizationService)
         {
             _authorizationService = authorizationService;
-            _emailService = emailService;
         }
 
         /// <summary>
@@ -29,7 +27,6 @@ namespace AuthorizationAPI.Presentation.Controllers
         public async Task<IActionResult> SingUpAsync(SingUpModel singUpModel, CancellationToken cancellationToken = default)
         {
             var user = await _authorizationService.SingUpAsync(singUpModel, RoleDTO.Patient, cancellationToken);
-            await SendEmailVerificationMessageAsync(user, cancellationToken);
             return Ok(user);
         }
 
@@ -56,15 +53,6 @@ namespace AuthorizationAPI.Presentation.Controllers
         {
             var accessToken = _authorizationService.GetAccessToken(email, password);
             return Ok(accessToken);
-        }
-
-        private async Task SendEmailVerificationMessageAsync(UserDTO user, CancellationToken cancellationToken = default)
-        {
-            string url = HttpContext.Request.Host.Value;
-            await _emailService.SendEmailAsync(user.Email,
-                                               "Confirm email address",
-                                               $"<a href='https://{url}/confirm/{user.Id}'>Тыкни чтобы подтвердить</a>",
-                                               cancellationToken);
         }
     }
 }

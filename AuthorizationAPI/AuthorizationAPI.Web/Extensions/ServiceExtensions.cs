@@ -5,6 +5,8 @@ using AuthorizationAPI.Domain.Repositories;
 using AuthorizationAPI.Persistence;
 using AuthorizationAPI.Persistence.Repositories;
 using AuthorizationAPI.Presentation;
+using AuthorizationAPI.Web.Settings;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -30,9 +32,24 @@ namespace AuthorizationAPI.Web.Extensions
         public static void ConfigureServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthorizationService, AuthorizationService>();
-            services.AddScoped<EmailService>();
         }
-
+        public static void ConfigureMassTransit(this IServiceCollection services, IConfiguration configuration, string massTransitSettingsName)
+        {
+            var settings = configuration.GetSection(massTransitSettingsName).Get<MassTransitSettings>();
+            services.AddMassTransit(x =>
+            {
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(settings.Host, settings.VirtualHost, h =>
+                    {
+                        h.Username(settings.UserName);
+                        h.Password(settings.Password);
+                    });
+                    cfg.AddRawJsonSerializer();
+                    cfg.ConfigureEndpoints(context);
+                });
+            });
+        }
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(opt =>
