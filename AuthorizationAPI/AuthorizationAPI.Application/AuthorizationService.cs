@@ -7,8 +7,10 @@ using AuthorizationAPI.Domain.Exceptions;
 using AuthorizationAPI.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
+using MassTransit;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using SharedEvents.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,12 +19,13 @@ namespace AuthorizationAPI.Application
 {
     public class AuthorizationService : IAuthorizationService
     {
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
         private readonly IValidator<SingUpModel> _singUpValidator;
         private readonly IValidator<ConfirmEmailModel> _confirmEmailValidator;
         private readonly JwtSettings _jwtSettings;
-        public AuthorizationService(IRepositoryManager repositoryManager, IMapper mapper, IOptions<JwtSettings> jwtSettings,
+        public AuthorizationService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint, IOptions<JwtSettings> jwtSettings,
                                     IValidator<SingUpModel> singUpValidator, IValidator<ConfirmEmailModel> confirmEmailValidator)
         {
             _repositoryManager = repositoryManager;
@@ -30,6 +33,7 @@ namespace AuthorizationAPI.Application
             _singUpValidator = singUpValidator;
             _confirmEmailValidator = confirmEmailValidator;
             _jwtSettings = jwtSettings.Value;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<UserDTO> SingUpAsync(SingUpModel model, RoleDTO role, CancellationToken cancellationToken = default)
@@ -45,6 +49,7 @@ namespace AuthorizationAPI.Application
             var user = new User(model.Email, _mapper.Map<Role>(role), Hasher.StringToHash(model.Password));
 
             _repositoryManager.UserRepository.Create(user);
+            await _publishEndpoint.Publish(new UserCreated(user.Id, user.Email, $"https://localhost:7191//authorization//confirm//{user.Id}"));
 
             return _mapper.Map<UserDTO>(user);
         }
