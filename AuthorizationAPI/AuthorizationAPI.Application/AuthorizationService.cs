@@ -25,7 +25,9 @@ namespace AuthorizationAPI.Application
         private readonly IValidator<SingUpModel> _singUpValidator;
         private readonly IValidator<ConfirmEmailModel> _confirmEmailValidator;
         private readonly JwtSettings _jwtSettings;
-        public AuthorizationService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint, IOptions<JwtSettings> jwtSettings,
+        private readonly AuthorizationSettings _authorizationSettings;
+        public AuthorizationService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint, 
+                                    IOptions<JwtSettings> jwtSettings, IOptions<AuthorizationSettings> authorizationSettings,
                                     IValidator<SingUpModel> singUpValidator, IValidator<ConfirmEmailModel> confirmEmailValidator)
         {
             _repositoryManager = repositoryManager;
@@ -33,6 +35,7 @@ namespace AuthorizationAPI.Application
             _singUpValidator = singUpValidator;
             _confirmEmailValidator = confirmEmailValidator;
             _jwtSettings = jwtSettings.Value;
+            _authorizationSettings = authorizationSettings.Value;
             _publishEndpoint = publishEndpoint;
         }
 
@@ -49,7 +52,7 @@ namespace AuthorizationAPI.Application
             var user = new User(model.Email, _mapper.Map<Role>(role), Hasher.StringToHash(model.Password));
 
             _repositoryManager.UserRepository.Create(user);
-            await _publishEndpoint.Publish(new UserCreated(user.Id, user.Email, $"https://localhost:7191//authorization//confirm//{user.Id}"));
+            await _publishEndpoint.Publish(new UserCreated(user.Id, user.Email, _authorizationSettings.ConfirmEmailUrlTemplate + user.Id));
 
             return _mapper.Map<UserDTO>(user);
         }

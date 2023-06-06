@@ -24,6 +24,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddAutoMapper(typeof(ServiceMappingProfile));
 builder.Services.AddValidatorsFromAssemblyContaining<SingUpValidator>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettingsConfig"));
+builder.Services.Configure<AuthorizationSettings>(builder.Configuration.GetSection("AuthorizationSettingsConfig"));
 
 var app = builder.Build();
 
