@@ -1,6 +1,7 @@
 using AuthorizationAPI.Application.Mappings;
 using AuthorizationAPI.Application.Settings;
 using AuthorizationAPI.Application.Validators;
+using AuthorizationAPI.Persistence;
 using AuthorizationAPI.Presentation.Controllers;
 using AuthorizationAPI.Web.Extensions;
 using AuthorizationAPI.Web.Middlewares;
@@ -27,6 +28,8 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 builder.Services.Configure<AuthorizationSettings>(builder.Configuration.GetSection("AuthorizationSettingsConfig"));
 
 var app = builder.Build();
+
+app.MigrateDatabase<AuthorizationContext>();
 
 if (app.Environment.IsDevelopment())
 {
