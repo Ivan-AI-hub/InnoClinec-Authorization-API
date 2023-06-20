@@ -26,7 +26,7 @@ namespace AuthorizationAPI.Presentation.Controllers
         [ProducesResponseType(typeof(ErrorDetails), 500)]
         public async Task<IActionResult> SingUpAsync(SingUpModel singUpModel, CancellationToken cancellationToken = default)
         {
-            var user = await _authorizationService.SingUpAsync(singUpModel, RoleDTO.Admin, cancellationToken);
+            var user = await _authorizationService.SingUpAsync(singUpModel, RoleDTO.Patient, cancellationToken);
             return Ok(user);
         }
 
