@@ -4,6 +4,7 @@ namespace AuthorizationAPI.Application.Abstractions
 {
     public interface IAuthorizationService
     {
+        Task ChangeRoleAsync(string email, RoleDTO role, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Confirms email for the user with a specific id

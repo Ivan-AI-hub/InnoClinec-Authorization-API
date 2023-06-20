@@ -26,8 +26,22 @@ namespace AuthorizationAPI.Presentation.Controllers
         [ProducesResponseType(typeof(ErrorDetails), 500)]
         public async Task<IActionResult> SingUpAsync(SingUpModel singUpModel, CancellationToken cancellationToken = default)
         {
-            var user = await _authorizationService.SingUpAsync(singUpModel, RoleDTO.Patient, cancellationToken);
+            var user = await _authorizationService.SingUpAsync(singUpModel, RoleDTO.Admin, cancellationToken);
             return Ok(user);
+        }
+
+        /// <summary>
+        /// Updates role for specific user
+        /// </summary>
+        [HttpPut("{email}/role")]
+        [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(ErrorDetails), 404)]
+        [ProducesResponseType(typeof(ErrorDetails), 500)]
+        public async Task<IActionResult> UpdateRole(string email, RoleDTO role, CancellationToken cancellationToken = default)
+        {
+             await _authorizationService.ChangeRoleAsync(email, role, cancellationToken);
+            return NoContent();
         }
 
         /// <summary>

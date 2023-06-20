@@ -78,7 +78,21 @@ namespace AuthorizationAPI.Application
             user.IsEmailConfirmed = true;
             _repositoryManager.UserRepository.Update(user);
         }
+        public async Task ChangeRoleAsync(string email, RoleDTO role, CancellationToken cancellationToken = default)
+        {
+            var user = _repositoryManager.UserRepository
+               .GetItemsByCondition(x => x.Email == email, false)
+               .FirstOrDefault();
 
+            if (user == null)
+            {
+                throw new UserNotFoundException(email);
+            }
+
+            user.Role = _mapper.Map<Role>(role);
+            _repositoryManager.UserRepository.Update(user);
+            await _publishEndpoint.Publish(new UserRoleUpdated(user.Email, role.ToString()), cancellationToken);
+        }
         public string GetAccessToken(string email, string password)
         {
             var user = _repositoryManager.UserRepository

@@ -15,13 +15,12 @@ builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureSwagger();
 builder.Services.ConfigureServices();
 builder.Services.ConfigureMassTransit(builder.Configuration, "MassTransitSettings");
-builder.Services.ConfigureJWT(builder.Configuration);
+builder.Services.ConfigureJWT(builder.Configuration.GetSection("JwtSettingsConfig"));
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(AuthorizationController).Assembly);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddAuthorization();
 builder.Services.AddAutoMapper(typeof(ServiceMappingProfile));
 builder.Services.AddValidatorsFromAssemblyContaining<SingUpValidator>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettingsConfig"));
@@ -39,6 +38,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
