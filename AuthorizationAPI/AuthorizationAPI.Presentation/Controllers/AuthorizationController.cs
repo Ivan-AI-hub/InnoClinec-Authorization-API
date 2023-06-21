@@ -40,7 +40,7 @@ namespace AuthorizationAPI.Presentation.Controllers
         [ProducesResponseType(typeof(ErrorDetails), 500)]
         public async Task<IActionResult> UpdateRole(string email, RoleDTO role, CancellationToken cancellationToken = default)
         {
-             await _authorizationService.ChangeRoleAsync(email, role, cancellationToken);
+            await _authorizationService.ChangeRoleAsync(email, role, cancellationToken);
             return NoContent();
         }
 
@@ -60,7 +60,7 @@ namespace AuthorizationAPI.Presentation.Controllers
 
         /// <returns>access token for user witn same email and password</returns>
         [HttpGet("SingIn")]
-        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(AccessToken), 200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         [ProducesResponseType(typeof(ErrorDetails), 500)]
         public IActionResult SingIn(string email, string password)

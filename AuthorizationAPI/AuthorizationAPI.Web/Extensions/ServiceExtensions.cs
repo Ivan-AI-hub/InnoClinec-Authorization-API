@@ -4,7 +4,6 @@ using AuthorizationAPI.Application.Settings;
 using AuthorizationAPI.Domain.Repositories;
 using AuthorizationAPI.Persistence;
 using AuthorizationAPI.Persistence.Repositories;
-using AuthorizationAPI.Presentation;
 using AuthorizationAPI.Web.Settings;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

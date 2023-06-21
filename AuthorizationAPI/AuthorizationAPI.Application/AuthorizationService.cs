@@ -26,7 +26,7 @@ namespace AuthorizationAPI.Application
         private readonly IValidator<ConfirmEmailModel> _confirmEmailValidator;
         private readonly JwtSettings _jwtSettings;
         private readonly AuthorizationSettings _authorizationSettings;
-        public AuthorizationService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint, 
+        public AuthorizationService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint,
                                     IOptions<JwtSettings> jwtSettings, IOptions<AuthorizationSettings> authorizationSettings,
                                     IValidator<SingUpModel> singUpValidator, IValidator<ConfirmEmailModel> confirmEmailValidator)
         {
@@ -93,7 +93,7 @@ namespace AuthorizationAPI.Application
             _repositoryManager.UserRepository.Update(user);
             await _publishEndpoint.Publish(new UserRoleUpdated(user.Email, role.ToString()), cancellationToken);
         }
-        public string GetAccessToken(string email, string password)
+        public AccessToken GetAccessToken(string email, string password)
         {
             var user = _repositoryManager.UserRepository
                     .GetItemsByCondition(x => x.Email == email && x.PasswordHach == Hasher.StringToHash(password), false)
@@ -109,7 +109,7 @@ namespace AuthorizationAPI.Application
                 throw new UserEmailNotConfirmedException(user.Email);
             }
 
-            return GenerateJwtToken(user);
+            return new AccessToken(GenerateJwtToken(user));
         }
 
         private string GenerateJwtToken(User user)

@@ -15,6 +15,6 @@ namespace AuthorizationAPI.Application.Abstractions
         /// Registers the patient in system
         /// </summary>
         Task<UserDTO> SingUpAsync(SingUpModel model, RoleDTO role, CancellationToken cancellationToken = default);
-        public string GetAccessToken(string email, string password);
+        public AccessToken GetAccessToken(string email, string password);
     }
 }
