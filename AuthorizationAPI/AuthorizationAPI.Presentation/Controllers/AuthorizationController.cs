@@ -1,6 +1,7 @@
 ﻿using AuthorizationAPI.Application.Abstractions;
 using AuthorizationAPI.Application.Abstractions.Models;
 using AuthorizationAPI.Presentation.Models.ErrorModels;
+using AuthorizationAPI.Presentation.Models.RequestModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthorizationAPI.Presentation.Controllers
@@ -38,9 +39,9 @@ namespace AuthorizationAPI.Presentation.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ErrorDetails), 404)]
         [ProducesResponseType(typeof(ErrorDetails), 500)]
-        public async Task<IActionResult> UpdateRole(string email, RoleDTO role, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> UpdateRole(string email, UpdateRoleRequestModel model, CancellationToken cancellationToken = default)
         {
-            await _authorizationService.ChangeRoleAsync(email, role, cancellationToken);
+            await _authorizationService.ChangeRoleAsync(email, model.Role, cancellationToken);
             return NoContent();
         }
 
@@ -48,14 +49,14 @@ namespace AuthorizationAPI.Presentation.Controllers
         /// Confirms email for the user with id = <paramref name="id"/>
         /// </summary>
         /// <param name="id">User id</param>
-        [HttpGet("confirm/{id}")]
-        [ProducesResponseType(200)]
+        [HttpPut("confirm/{id}")]
+        [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         [ProducesResponseType(typeof(ErrorDetails), 500)]
         public async Task<IActionResult> ConfirmEmailAsync(Guid id, CancellationToken cancellationToken = default)
         {
             await _authorizationService.ConfirmEmailAsync(new ConfirmEmailModel(id), cancellationToken);
-            return Ok();
+            return NoContent();
         }
 
         /// <returns>access token for user witn same email and password</returns>
