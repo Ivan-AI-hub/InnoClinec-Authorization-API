@@ -1,6 +1,7 @@
 ﻿using AuthorizationAPI.Application.Abstractions;
 using AuthorizationAPI.Application.Abstractions.Models;
 using AuthorizationAPI.Presentation.Models.ErrorModels;
+using AuthorizationAPI.Presentation.Models.RequestModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthorizationAPI.Presentation.Controllers
@@ -9,11 +10,9 @@ namespace AuthorizationAPI.Presentation.Controllers
     public class AuthorizationController : ControllerBase
     {
         private readonly IAuthorizationService _authorizationService;
-        private readonly EmailService _emailService;
-        public AuthorizationController(IAuthorizationService authorizationService, EmailService emailService)
+        public AuthorizationController(IAuthorizationService authorizationService)
         {
             _authorizationService = authorizationService;
-            _emailService = emailService;
         }
 
         /// <summary>
@@ -29,42 +28,46 @@ namespace AuthorizationAPI.Presentation.Controllers
         public async Task<IActionResult> SingUpAsync(SingUpModel singUpModel, CancellationToken cancellationToken = default)
         {
             var user = await _authorizationService.SingUpAsync(singUpModel, RoleDTO.Patient, cancellationToken);
-            await SendEmailVerificationMessageAsync(user, cancellationToken);
             return Ok(user);
+        }
+
+        /// <summary>
+        /// Updates role for specific user
+        /// </summary>
+        [HttpPut("{email}/role")]
+        [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(ErrorDetails), 404)]
+        [ProducesResponseType(typeof(ErrorDetails), 500)]
+        public async Task<IActionResult> UpdateRole(string email, UpdateRoleRequestModel model, CancellationToken cancellationToken = default)
+        {
+            await _authorizationService.ChangeRoleAsync(email, model.Role, cancellationToken);
+            return NoContent();
         }
 
         /// <summary>
         /// Confirms email for the user with id = <paramref name="id"/>
         /// </summary>
         /// <param name="id">User id</param>
-        [HttpGet("confirm/{id}")]
-        [ProducesResponseType(200)]
+        [HttpPut("confirm/{id}")]
+        [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         [ProducesResponseType(typeof(ErrorDetails), 500)]
         public async Task<IActionResult> ConfirmEmailAsync(Guid id, CancellationToken cancellationToken = default)
         {
             await _authorizationService.ConfirmEmailAsync(new ConfirmEmailModel(id), cancellationToken);
-            return Ok();
+            return NoContent();
         }
 
         /// <returns>access token for user witn same email and password</returns>
         [HttpGet("SingIn")]
-        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(AccessToken), 200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         [ProducesResponseType(typeof(ErrorDetails), 500)]
         public IActionResult SingIn(string email, string password)
         {
             var accessToken = _authorizationService.GetAccessToken(email, password);
             return Ok(accessToken);
-        }
-
-        private async Task SendEmailVerificationMessageAsync(UserDTO user, CancellationToken cancellationToken = default)
-        {
-            string url = HttpContext.Request.Host.Value;
-            await _emailService.SendEmailAsync(user.Email,
-                                               "Confirm email address",
-                                               $"<a href='https://{url}/confirm/{user.Id}'>Тыкни чтобы подтвердить</a>",
-                                               cancellationToken);
         }
     }
 }

@@ -6,5 +6,10 @@
             : base($"The user with the identifier {userId} was not found.")
         {
         }
+
+        public UserNotFoundException(string userEmail)
+            : base($"The user with the email {userEmail} was not found.")
+        {
+        }
     }
 }
