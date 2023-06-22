@@ -13,7 +13,7 @@ namespace AuthorizationAPI.Web.Middlewares
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext httpContext, ILogger<ExceptionMiddleware> logger)
         {
             try
             {
@@ -22,6 +22,7 @@ namespace AuthorizationAPI.Web.Middlewares
             catch (Exception ex)
             {
                 await HandleExceptionAsync(httpContext, ex);
+                logger.LogError(ex, ex.Message);
             }
         }
 

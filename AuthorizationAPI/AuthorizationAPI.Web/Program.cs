@@ -10,6 +10,7 @@ using FluentValidation;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureSqlContext(builder.Configuration, "DefaultConnection");
+builder.Services.ConfigureLogger(builder.Configuration, builder.Environment, "ElasticConfiguration:Uri");
 
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureSwagger();
@@ -27,7 +28,6 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 builder.Services.Configure<AuthorizationSettings>(builder.Configuration.GetSection("AuthorizationSettingsConfig"));
 
 var app = builder.Build();
-
 app.MigrateDatabase<AuthorizationContext>();
 
 if (app.Environment.IsDevelopment())

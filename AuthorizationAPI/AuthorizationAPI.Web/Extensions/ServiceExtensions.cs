@@ -10,6 +10,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
+using System.Reflection;
+using System;
 using System.Text;
 
 namespace AuthorizationAPI.Web.Extensions
@@ -31,6 +35,24 @@ namespace AuthorizationAPI.Web.Extensions
         public static void ConfigureServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthorizationService, AuthorizationService>();
+        }
+        public static void ConfigureLogger(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment, string elasticUriSection)
+        {
+            services.AddSerilog((context, loggerConfiguration) =>
+            {
+                loggerConfiguration.Enrich.FromLogContext()
+                    .Enrich.WithMachineName()
+                    .WriteTo.Console()
+                    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration[elasticUriSection]))
+                    {
+                        IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name!.ToLower().Replace(".", "-")}-{environment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}",
+                        AutoRegisterTemplate = true,
+                        NumberOfShards = 2,
+                        NumberOfReplicas = 1
+                    })
+                    .Enrich.WithProperty("Environment", environment.EnvironmentName)
+                    .ReadFrom.Configuration(configuration);
+            });
         }
         public static void ConfigureMassTransit(this IServiceCollection services, IConfiguration configuration, string massTransitSettingsName)
         {
