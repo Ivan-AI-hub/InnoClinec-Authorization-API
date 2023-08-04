@@ -7,8 +7,10 @@ using AuthorizationAPI.Domain.Exceptions;
 using AuthorizationAPI.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
+using MassTransit;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using SharedEvents.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,12 +19,15 @@ namespace AuthorizationAPI.Application
 {
     public class AuthorizationService : IAuthorizationService
     {
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
         private readonly IValidator<SingUpModel> _singUpValidator;
         private readonly IValidator<ConfirmEmailModel> _confirmEmailValidator;
         private readonly JwtSettings _jwtSettings;
-        public AuthorizationService(IRepositoryManager repositoryManager, IMapper mapper, IOptions<JwtSettings> jwtSettings,
+        private readonly AuthorizationSettings _authorizationSettings;
+        public AuthorizationService(IRepositoryManager repositoryManager, IMapper mapper, IPublishEndpoint publishEndpoint,
+                                    IOptions<JwtSettings> jwtSettings, IOptions<AuthorizationSettings> authorizationSettings,
                                     IValidator<SingUpModel> singUpValidator, IValidator<ConfirmEmailModel> confirmEmailValidator)
         {
             _repositoryManager = repositoryManager;
@@ -30,6 +35,8 @@ namespace AuthorizationAPI.Application
             _singUpValidator = singUpValidator;
             _confirmEmailValidator = confirmEmailValidator;
             _jwtSettings = jwtSettings.Value;
+            _authorizationSettings = authorizationSettings.Value;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<UserDTO> SingUpAsync(SingUpModel model, RoleDTO role, CancellationToken cancellationToken = default)
@@ -45,6 +52,7 @@ namespace AuthorizationAPI.Application
             var user = new User(model.Email, _mapper.Map<Role>(role), Hasher.StringToHash(model.Password));
 
             _repositoryManager.UserRepository.Create(user);
+            await _publishEndpoint.Publish(new UserCreated(user.Id, user.Email, _authorizationSettings.ConfirmEmailUrlTemplate + user.Id));
 
             return _mapper.Map<UserDTO>(user);
         }
@@ -70,8 +78,22 @@ namespace AuthorizationAPI.Application
             user.IsEmailConfirmed = true;
             _repositoryManager.UserRepository.Update(user);
         }
+        public async Task ChangeRoleAsync(string email, RoleDTO role, CancellationToken cancellationToken = default)
+        {
+            var user = _repositoryManager.UserRepository
+               .GetItemsByCondition(x => x.Email == email, false)
+               .FirstOrDefault();
 
-        public string GetAccessToken(string email, string password)
+            if (user == null)
+            {
+                throw new UserNotFoundException(email);
+            }
+
+            user.Role = _mapper.Map<Role>(role);
+            _repositoryManager.UserRepository.Update(user);
+            await _publishEndpoint.Publish(new UserRoleUpdated(user.Email, role.ToString()), cancellationToken);
+        }
+        public AccessToken GetAccessToken(string email, string password)
         {
             var user = _repositoryManager.UserRepository
                     .GetItemsByCondition(x => x.Email == email && x.PasswordHach == Hasher.StringToHash(password), false)
@@ -87,7 +109,7 @@ namespace AuthorizationAPI.Application
                 throw new UserEmailNotConfirmedException(user.Email);
             }
 
-            return GenerateJwtToken(user);
+            return new AccessToken(GenerateJwtToken(user));
         }
 
         private string GenerateJwtToken(User user)

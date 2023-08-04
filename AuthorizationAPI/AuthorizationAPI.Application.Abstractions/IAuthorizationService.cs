@@ -4,6 +4,7 @@ namespace AuthorizationAPI.Application.Abstractions
 {
     public interface IAuthorizationService
     {
+        Task ChangeRoleAsync(string email, RoleDTO role, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Confirms email for the user with a specific id
@@ -14,6 +15,6 @@ namespace AuthorizationAPI.Application.Abstractions
         /// Registers the patient in system
         /// </summary>
         Task<UserDTO> SingUpAsync(SingUpModel model, RoleDTO role, CancellationToken cancellationToken = default);
-        public string GetAccessToken(string email, string password);
+        public AccessToken GetAccessToken(string email, string password);
     }
 }
