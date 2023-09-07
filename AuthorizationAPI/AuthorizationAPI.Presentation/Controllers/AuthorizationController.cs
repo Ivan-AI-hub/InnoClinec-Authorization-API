@@ -25,9 +25,9 @@ namespace AuthorizationAPI.Presentation.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(ErrorDetails), 400)]
         [ProducesResponseType(typeof(ErrorDetails), 500)]
-        public async Task<IActionResult> SingUpAsync(SingUpModel singUpModel, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> SingUpAsync([FromBody] SingUpModel singUpModel, CancellationToken cancellationToken = default)
         {
-            var user = await _authorizationService.SingUpAsync(singUpModel, RoleDTO.Patient, cancellationToken);
+            var user = await _authorizationService.SingUpAsync(singUpModel, RoleDTO.Admin, cancellationToken);
             return Ok(user);
         }
 
@@ -39,7 +39,7 @@ namespace AuthorizationAPI.Presentation.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ErrorDetails), 404)]
         [ProducesResponseType(typeof(ErrorDetails), 500)]
-        public async Task<IActionResult> UpdateRole(string email, UpdateRoleRequestModel model, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> UpdateRole(string email, [FromBody] UpdateRoleRequestModel model, CancellationToken cancellationToken = default)
         {
             await _authorizationService.ChangeRoleAsync(email, model.Role, cancellationToken);
             return NoContent();
